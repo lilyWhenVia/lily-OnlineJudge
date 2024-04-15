@@ -1,8 +1,13 @@
 package com.lily.nativecodesandbox.sandbox.impl;
 
+import cn.hutool.core.io.FileUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.StopWatch;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +32,28 @@ class JavaCodeSandboxTest {
     }
 
     public static void main(String[] args) {
-        stopWatchTest();
+        String codeFile = "D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox\\execCode";
+        new JavaCodeSandboxTest().getProcessByCmd("D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox", codeFile);
+    }
+
+
+
+    public void getProcessByCmd(String logFilePath, String codeFilePath) {
+        // TODO
+        ProcessBuilder pb = new ProcessBuilder("java","Main", "1", "2");
+        System.setProperty("console.encoding", "UTF-8");
+//        Map<String, String> env = pb.environment();
+//        env.put("VAR1", "myValue");
+        File file = new File(codeFilePath);
+        pb.directory(file);
+        String userLogFile = logFilePath + File.separator + "myLog";
+        File codeLog = new File(userLogFile);
+        pb.redirectErrorStream(true);
+        pb.redirectOutput(ProcessBuilder.Redirect.appendTo(codeLog));
+        try {
+            Process p = pb.start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

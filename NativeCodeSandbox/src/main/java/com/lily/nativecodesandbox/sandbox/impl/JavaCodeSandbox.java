@@ -3,6 +3,7 @@ package com.lily.nativecodesandbox.sandbox.impl;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.ObjUtil;
 import com.lily.nativecodesandbox.common.ExecuteStatusEnum;
 import com.lily.nativecodesandbox.dto.CodeOutput;
 import com.lily.nativecodesandbox.dto.ExecuteCodeRequest;
@@ -11,6 +12,7 @@ import com.lily.nativecodesandbox.dto.JudgeInfo;
 import com.lily.nativecodesandbox.sandbox.CodeSandbox;
 import com.lily.nativecodesandbox.sandbox.ProcessUtils;
 import com.lily.nativecodesandbox.service.CodeSandboxService;
+import com.lily.nativecodesandbox.service.impl.CodeSandboxServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StopWatch;
@@ -29,11 +31,9 @@ import java.util.UUID;
 @Slf4j
 public class JavaCodeSandbox implements CodeSandbox {
 
-    @Resource
-    private ProcessUtils processUtils;
 
-    @Resource
-    private CodeSandboxService codeSandboxService;
+//    @Resource
+    private static CodeSandboxService codeSandboxService;
 
     /**
      * 全局存放代码代码目录名
@@ -71,10 +71,15 @@ public class JavaCodeSandbox implements CodeSandbox {
     private final Long TIME_OUT = 1000L;
 
 
+    String SECURITY_MANAGER_PATH = "";
+    String SECURITY_MANAGER_CLASS_NAME = "";
+
+
     public static void main(String[] args) {
         JavaCodeSandbox javaCodeSandbox = new JavaCodeSandbox();
         ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
 
+        codeSandboxService = new CodeSandboxServiceImpl();
         // 去掉包名
         String code = ResourceUtil.readStr("D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox\\src\\main\\java\\com\\lily\\nativecodesandbox\\Main.java", StandardCharsets.UTF_8);
         code = "public class Main {\n" +
@@ -82,15 +87,8 @@ public class JavaCodeSandbox implements CodeSandbox {
                 "        int a = Integer.parseInt(args[0]);\n" +
                 "        int b = Integer.parseInt(args[1]);\n" +
                 "        System.out.println(a + b);\n" +
-                "\n" +
-                "        try {\n" +
-                "            Thread.sleep(1000*60);\n" +
-                "        } catch (InterruptedException e) {\n" +
-                "            throw new RuntimeException(e);\n" +
-                "        }\n" +
-                "\n" +
                 "    }\n" +
-                "}\n";
+                "}";
         executeCodeRequest.setCode(code);
 
         List<String> inputList = List.of("1 2", "1 3");
@@ -102,7 +100,6 @@ public class JavaCodeSandbox implements CodeSandbox {
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         List<String> inputList = executeCodeRequest.getInputList();
-        String language = executeCodeRequest.getLanguage();
         String code = executeCodeRequest.getCode();
 
         // 1. 把用户的代码保存为文件
@@ -116,51 +113,26 @@ public class JavaCodeSandbox implements CodeSandbox {
         }
         // 新建用户代码文件
         File userCodeFile = FileUtil.writeString(code, codeFilePath, StandardCharsets.UTF_8);
-        System.out.println(userCodeFile.getAbsolutePath());
-
+        /**
+         * 编译运行
+         */
         // 2. 编译代码获取执行结果
-        Boolean compileResult = codeSandboxService.doCompile(codeDirPath);
-        ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
-
-        // 3. 执行程序
-        ExecuteCodeResponse runCodeResponse = codeSandboxService.doRun(inputList, codeDirPath, TIME_OUT);
-
-        List<CodeOutput> codeOutputList = runCodeResponse.getCodeOutput();
-        String codeSandboxMes = runCodeResponse.getCodeSandboxMes();
-        Integer codeSandboxStatus = runCodeResponse.getCodeSandboxStatus();
-
-//        maxTime = runTimeCount.getTotalTimeMillis() / inputList.size();
-
-        // 文件删除
-
-        if (FileUtil.exist(codeDirPath)) {
-            boolean del = FileUtil.del(codeDirPath);
-            log.info("删除文件夹：" + codeDirPath + " " + (del ? "成功" : "失败"));
+        ExecuteCodeResponse executeCodeResponse;
+        executeCodeResponse = codeSandboxService.doCompile( userCodeFile.getAbsolutePath());
+        Integer compileStatus = executeCodeResponse.getCodeSandboxStatus();
+        if (compileStatus == ExecuteStatusEnum.COMPILE_SUCCESS.getExecuteStatus()) {
+            // 3. 编译成功即执行程序
+            executeCodeResponse = codeSandboxService.doRun(inputList, codeDirPath, TIME_OUT);
         }
 
-        // 信息整理收集
-        // 判断是否超时
-        if (inputList.size() != codeOutputList.size()) {
-            executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.RUN_TIMEOUT.getExecuteStatus());
-        }
-        JudgeInfo judgeInfo = new JudgeInfo();
-        judgeInfo.setTime(0L);
-        judgeInfo.setMemory(256L);
-        judgeInfo.setMessage("input full execute success");
-        executeCodeResponse.setJudgeInfo(judgeInfo);
-        executeCodeResponse.setCodeOutput(codeOutputList);
-        System.out.printf(executeCodeResponse.toString());
+//        // 文件删除
+//        if (FileUtil.exist(codeDirPath)) {
+//            boolean del = FileUtil.del(codeDirPath);
+//            log.info("删除文件夹：" + codeDirPath + " " + (del ? "成功" : "失败"));
+//        }
+        System.out.println(executeCodeResponse);
         return executeCodeResponse;
     }
 
-    /**
-     * 程序执行异常处理
-     */
-    private ExecuteCodeResponse getErrorResponse(Exception e) {
-        ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
-        executeCodeResponse.setCodeSandboxMes(e.getMessage());
-        executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.SYSTEM_ERROR.getExecuteStatus());
-        return executeCodeResponse;
-    }
 
 }

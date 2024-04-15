@@ -8,7 +8,18 @@ import lombok.Data;
  */
 @Data
 public class CodeOutput {
+    /**
+     * 用例正确输出结果
+     */
     private String stdoutMessage;
+
+    /**
+     * 用例错误输出信息
+     */
     private String stdErrorMessage;
-    private String codeExecute;
+
+    /**
+     * 输入用例
+     */
+    private String inputExample;
 }
