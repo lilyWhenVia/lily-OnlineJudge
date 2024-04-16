@@ -1,4 +1,4 @@
-package com.lily.nativecodesandbox.dto;
+package com.lily.nativecodesandbox.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

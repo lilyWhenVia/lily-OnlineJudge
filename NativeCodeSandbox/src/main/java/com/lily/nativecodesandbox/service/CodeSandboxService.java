@@ -1,6 +1,6 @@
 package com.lily.nativecodesandbox.service;
 
-import com.lily.nativecodesandbox.dto.ExecuteCodeResponse;
+import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -22,16 +22,21 @@ public class MySecurityManager extends SecurityManager {
     @Override
     public void checkRead(String file) {
         System.out.println(file);
-        if (file.contains("D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox")) {
+        if (file.contains("D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox\\execCode")) {
             return;
         }
-//        throw new SecurityException("checkRead 权限异常：" + file);
+        throw new SecurityException("checkRead 权限异常：" + file);
     }
 
     // 检测程序是否允许写文件
     @Override
     public void checkWrite(String file) {
 //        throw new SecurityException("checkWrite 权限异常：" + file);
+        System.out.println(file);
+        if (file.contains("D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox\\execCode")) {
+            return;
+        }
+        throw new SecurityException("checkRead 权限异常：" + file);
     }
 
     // 检测程序是否允许删除文件

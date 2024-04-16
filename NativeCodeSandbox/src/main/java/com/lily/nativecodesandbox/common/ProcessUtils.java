@@ -1,6 +1,6 @@
-package com.lily.nativecodesandbox.sandbox;
+package com.lily.nativecodesandbox.common;
 
-import com.lily.nativecodesandbox.dto.ExecuteMessage;
+import com.lily.nativecodesandbox.model.ExecuteMessage;
 
 /**
  * Created by lily via on 2024/4/14 22:38

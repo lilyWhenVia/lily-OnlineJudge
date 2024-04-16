@@ -1,20 +1,9 @@
-package com.lily.nativecodesandbox.sandbox.impl;
+package com.lily.nativecodesandbox.JavaSandbox;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.dfa.WordTree;
-import com.lily.nativecodesandbox.dto.ExecuteCodeRequest;
-import com.lily.nativecodesandbox.dto.ExecuteCodeResponse;
-import com.lily.nativecodesandbox.dto.ExecuteMessage;
-import com.lily.nativecodesandbox.sandbox.ProcessUtils;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by lily via on 2024/4/14 22:37
@@ -27,7 +16,7 @@ public class ExampleCodeSandbox {
 
     private static final long TIME_OUT = 5000L;
 
-    private static final String SECURITY_MANAGER_PATH = "C:\\code\\yuoj-code-sandbox\\src\\main\\resources\\security";
+    private static final String SECURITY_MANAGER_PATH = "C:\\code\\yuoj-code-JavaSandbox\\src\\main\\resources\\security";
 
     private static final String SECURITY_MANAGER_CLASS_NAME = "MySecurityManager";
 

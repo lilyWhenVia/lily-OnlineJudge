@@ -1,27 +1,17 @@
-package com.lily.nativecodesandbox.sandbox.impl;
+package com.lily.nativecodesandbox.JavaSandbox;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.ObjUtil;
 import com.lily.nativecodesandbox.common.ExecuteStatusEnum;
-import com.lily.nativecodesandbox.dto.CodeOutput;
-import com.lily.nativecodesandbox.dto.ExecuteCodeRequest;
-import com.lily.nativecodesandbox.dto.ExecuteCodeResponse;
-import com.lily.nativecodesandbox.dto.JudgeInfo;
+import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
+import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.sandbox.CodeSandbox;
-import com.lily.nativecodesandbox.sandbox.ProcessUtils;
 import com.lily.nativecodesandbox.service.CodeSandboxService;
 import com.lily.nativecodesandbox.service.impl.CodeSandboxServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StopWatch;
 
-import javax.annotation.Resource;
 import java.io.*;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -101,7 +91,8 @@ public class JavaCodeSandbox implements CodeSandbox {
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         List<String> inputList = executeCodeRequest.getInputList();
         String code = executeCodeRequest.getCode();
-
+        // 设置编码
+        System.setProperty("console.encoding", "UTF-8");
         // 1. 把用户的代码保存为文件
         // 判断全局代码目录是否存在，没有则新建
         if (!FileUtil.exist(globalCodePathName)) {
@@ -126,10 +117,10 @@ public class JavaCodeSandbox implements CodeSandbox {
         }
 
 //        // 文件删除
-//        if (FileUtil.exist(codeDirPath)) {
-//            boolean del = FileUtil.del(codeDirPath);
-//            log.info("删除文件夹：" + codeDirPath + " " + (del ? "成功" : "失败"));
-//        }
+        if (FileUtil.exist(codeDirPath)) {
+            boolean del = FileUtil.del(codeDirPath);
+            log.info("删除文件夹：" + codeDirPath + " " + (del ? "成功" : "失败"));
+        }
         System.out.println(executeCodeResponse);
         return executeCodeResponse;
     }

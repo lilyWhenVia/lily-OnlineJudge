@@ -1,0 +1,33 @@
+{
+  "defaultAction": "SCMP_ACT_ALLOW",
+  "architectures": [
+    "SCMP_ARCH_X86_64"
+  ],
+  "syscalls": [
+    {
+      "names": [
+        "read",
+        "write",
+        "exit",
+        "exit_group"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    },
+    {
+      "names": [
+        "open",
+        "close"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    },
+    {
+      "names": [
+        "socket",
+        "connect",
+        "recvfrom",
+        "sendto"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}
