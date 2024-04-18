@@ -1,18 +1,8 @@
-3
-3
-Hello World!
-3
-Hello World!
-你好世界这是执行代码的输出结果
-3
-Hello World!
-你好世界这是执行代码的输出结果
-3
-Hello World!
-你好世界这是执行代码的输出结果
-3
-Hello World!
-你好世界这是执行代码的输出结果
-3
-Hello World!
-你好世界这是执行代码的输出结果
+错误: 找不到或无法加载主类 Main
+原因: java.lang.ClassNotFoundException: Main
+错误: 找不到或无法加载主类 Main
+原因: java.lang.ClassNotFoundException: Main
+错误: 找不到或无法加载主类 Main
+原因: java.lang.ClassNotFoundException: Main
+错误: 找不到或无法加载主类 Main
+原因: java.lang.ClassNotFoundException: Main

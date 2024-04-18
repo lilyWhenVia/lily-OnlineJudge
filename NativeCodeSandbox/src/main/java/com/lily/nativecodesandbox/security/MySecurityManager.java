@@ -42,12 +42,12 @@ public class MySecurityManager extends SecurityManager {
     // 检测程序是否允许删除文件
     @Override
     public void checkDelete(String file) {
-//        throw new SecurityException("checkDelete 权限异常：" + file);
+        throw new SecurityException("checkDelete 权限异常：" + file);
     }
 
     // 检测程序是否允许连接网络
     @Override
     public void checkConnect(String host, int port) {
-//        throw new SecurityException("checkConnect 权限异常：" + host + ":" + port);
+        throw new SecurityException("checkConnect 权限异常：" + host + ":" + port);
     }
 }

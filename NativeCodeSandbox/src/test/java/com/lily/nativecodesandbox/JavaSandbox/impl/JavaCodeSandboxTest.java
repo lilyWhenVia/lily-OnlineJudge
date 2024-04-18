@@ -5,6 +5,7 @@ import org.springframework.util.StopWatch;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by lily via on 2024/4/15 12:11
@@ -35,10 +36,10 @@ class JavaCodeSandboxTest {
 
     public void getProcessByCmd(String logFilePath, String codeFilePath) {
         // TODO
-        ProcessBuilder pb = new ProcessBuilder("java","Main", "1", "2");
-        System.setProperty("console.encoding", "UTF-8");
-//        Map<String, String> env = pb.environment();
-//        env.put("VAR1", "myValue");
+        ProcessBuilder pb = new ProcessBuilder("java","-Dfile.encoding=UTF-8","Main", "1", "2");
+        System.setProperty("console.encoding", "GBK");
+        Map<String, String> env = pb.environment();
+        env.put("encoding", "UTF-8");
         File file = new File(codeFilePath);
         pb.directory(file);
         String userLogFile = logFilePath + File.separator + "myLog";

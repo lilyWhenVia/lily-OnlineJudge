@@ -28,34 +28,34 @@
 
 <!--        docker-java-->
 <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.docker-java/docker-java &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.docker-java</groupId>-->
-<!--            <artifactId>docker-java</artifactId>-->
-<!--            <version>3.3.0</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.docker-java</groupId>-->
-<!--            <artifactId>docker-java-transport-httpclient5</artifactId>-->
-<!--            <version>3.3.0</version>-->
-<!--        </dependency>-->
-
-        <!--docker client begin-->
         <dependency>
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java</artifactId>
-            <version>3.0.14</version>
+            <version>3.3.0</version>
         </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.docker-java/docker-java-transport-httpclient5 &ndash;&gt;-->
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1</version>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-transport-httpclient5</artifactId>
+            <version>3.3.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>2.26</version>
-        </dependency>
+
+        <!--docker client begin-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.docker-java</groupId>-->
+<!--            <artifactId>docker-java</artifactId>-->
+<!--            <version>3.0.14</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>javax.ws.rs</groupId>-->
+<!--            <artifactId>javax.ws.rs-api</artifactId>-->
+<!--            <version>2.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.inject</groupId>-->
+<!--            <artifactId>jersey-hk2</artifactId>-->
+<!--            <version>2.26</version>-->
+<!--        </dependency>-->
         <!--docker client end-->
 
         <!-- https://hutool.cn/docs/index.html#/-->

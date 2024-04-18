@@ -1,51 +1,133 @@
-package com.lily.nativecodesandbox.service.impl;
+package com.lily.nativecodesandbox.JavaSandbox;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import com.lily.nativecodesandbox.common.ExecuteStatusEnum;
 import com.lily.nativecodesandbox.model.CodeOutput;
+import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.model.JudgeInfo;
+import com.lily.nativecodesandbox.sandbox.CodeSandbox;
 import com.lily.nativecodesandbox.service.CodeSandboxService;
+import com.lily.nativecodesandbox.service.impl.CodeSandboxServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.annotation.Resource;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by lily via on 2024/4/14 22:22
+ * Created by lily via on 2024/4/13 16:37
  */
 @Slf4j
 @Component
-public class CodeSandboxServiceImpl implements CodeSandboxService {
+public class JavaCodeSandboxImpl implements CodeSandbox {
 
-    public void getProcessByCmd(String logFilePath) {
-        // TODO
-        ProcessBuilder pb = new ProcessBuilder("javac -encoding utf-8", "codeFilePath");
-        Map<String, String> env = pb.environment();
-        env.put("VAR1", "myValue");
-        pb.directory(new File("myDir"));
-        String userLogFile = logFilePath + File.separator + "log";
-        File codeLog = new File(userLogFile);
-        pb.redirectErrorStream(true);
-        pb.redirectError(ProcessBuilder.Redirect.appendTo(codeLog));
-        pb.redirectOutput(ProcessBuilder.Redirect.appendTo(codeLog));
-        try {
-            Process p = pb.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+    /**
+     * 全局存放代码代码目录名
+     */
+    private final String GLOBAL_CODE_DIR_NAME = "execCode";
+
+    /**
+     * 用户当前工作的目录
+     */
+    private final String userDir = System.getProperty("user.dir");
+
+    /**
+     * 全局代码目录路径
+     */
+    private final String globalCodePathName = userDir + File.separator + GLOBAL_CODE_DIR_NAME;
+
+    /**
+     * 隔离用户代码文件夹目录路径
+     */
+    private final String codeDirPath = globalCodePathName + File.separator + UUID.randomUUID();
+
+    /**
+     * 用户代码文件名
+     */
+    private final String codeFileName = "Main.java";
+
+    /**
+     * 用户代码文件路径
+     */
+    private final String codeFilePath = codeDirPath + File.separator + codeFileName;
+
+    /**
+     * 执行最大时间
+     */
+    private final Long TIME_OUT = 1000L;
+
+
+    String SECURITY_MANAGER_PATH = userDir+File.separator+"src"+File.separator+"main"+
+            File.separator+"java"+File.separator+"com"+File.separator+"lily"+File.separator+"nativecodesandbox"+File.separator+"security";
+    String SECURITY_MANAGER_CLASS_NAME = "MySecurityManager.java";
+
+
+    public static void main(String[] args) {
+        JavaCodeSandboxImpl javaCodeSandboxImpl = new JavaCodeSandboxImpl();
+        ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
+        // 去掉包名
+        String code; // = ResourceUtil.readStr("D:\\JavaProject\\OnlineJudge\\NativeCodeSandbox\\src\\main\\java\\com\\lily\\nativecodesandbox\\Main.java", "GBK");
+        code = "public class Main {\n" +
+                "    public static void main(String[] args) {\n" +
+                "        int a = Integer.parseInt(args[0]);\n" +
+                "        int b = Integer.parseInt(args[1]);\n" +
+                "        System.out.println(a + b);\n" +
+                "        System.out.println(\"你好世界你好世界\");\n" +
+                "    }\n" +
+                "}";
+        executeCodeRequest.setCode(code);
+
+        List<String> inputList = List.of("1 2", "1 3");
+        executeCodeRequest.setInputList(inputList);
+        javaCodeSandboxImpl.executeCode(executeCodeRequest);
     }
 
+
     @Override
+    public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
+        List<String> inputList = executeCodeRequest.getInputList();
+        String code = executeCodeRequest.getCode();
+        // 1. 把用户的代码保存为文件
+        // 判断全局代码目录是否存在，没有则新建
+        if (!FileUtil.exist(globalCodePathName)) {
+            FileUtil.mkdir(globalCodePathName);
+        }
+        // 把用户的代码隔离存放
+        if (!FileUtil.exist(codeDirPath)) {
+            FileUtil.mkdir(codeDirPath);
+        }
+        // 新建用户代码文件
+        File userCodeFile = FileUtil.writeString(code, codeFilePath, "UTF-8");
+        /**
+         * 编译运行
+         */
+        // 2. 编译代码获取执行结果
+        ExecuteCodeResponse executeCodeResponse;
+        executeCodeResponse = doCompile( userCodeFile.getAbsolutePath());
+        Integer compileStatus = executeCodeResponse.getCodeSandboxStatus();
+        if (compileStatus == ExecuteStatusEnum.COMPILE_SUCCESS.getExecuteStatus()) {
+            // 3. 编译成功即执行程序
+            executeCodeResponse = doRun(inputList, codeDirPath, TIME_OUT);
+        }
+//        // 文件删除
+        if (FileUtil.exist(codeDirPath)) {
+            boolean del = FileUtil.del(codeDirPath);
+            log.info("删除文件夹：" + codeDirPath + " " + (del ? "成功" : "失败"));
+        }
+        System.out.println(executeCodeResponse);
+        return executeCodeResponse;
+    }
+
+
     public ExecuteCodeResponse doCompile(String codeFilePath) {
         // TODO
 //        2. 编译代码获取执行结果
@@ -61,7 +143,7 @@ public class CodeSandboxServiceImpl implements CodeSandboxService {
                 StringBuilder outputMessage = new StringBuilder();
                 // todo 验证输出流
                 // 分批获取程序的正常输出
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "GBK"));
                 bufferedReader.lines().forEach(line -> outputMessage.append(line).append("\n"));
                 executeCodeResponse.setCodeSandboxMes(outputMessage.toString()); // 编译信息
                 executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.COMPILE_SUCCESS.getExecuteStatus()); // 编译成功状态
@@ -69,7 +151,7 @@ public class CodeSandboxServiceImpl implements CodeSandboxService {
             } else {
                 // 分批获取程序的异常输出
                 StringBuilder errorMessage = new StringBuilder();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), "GBK"));
                 bufferedReader.lines().forEach(line -> errorMessage.append(line).append("\n"));
                 executeCodeResponse.setCodeSandboxMes(errorMessage.toString()); // 编译信息
                 executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.COMPILE_FAIL.getExecuteStatus()); // 编译失败
@@ -82,7 +164,6 @@ public class CodeSandboxServiceImpl implements CodeSandboxService {
     }
 
 
-    @Override
     public ExecuteCodeResponse doRun(List<String> inputList, String codeDirPath, Long TIME_OUT) {
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
         String inputArgs;
@@ -114,7 +195,7 @@ public class CodeSandboxServiceImpl implements CodeSandboxService {
                     StringBuilder outputMessage = new StringBuilder();
                     // todo 验证输出流
                     // 分批获取程序的正常输出
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream(),StandardCharsets.UTF_8));
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream(),"GBK"));
                     bufferedReader.lines().forEach(line -> outputMessage.append(line));
                     codeOutput.setInputExample(inputArgs);
                     codeOutput.setStdoutMessage(outputMessage.toString()); // 代码执行结果
@@ -123,9 +204,8 @@ public class CodeSandboxServiceImpl implements CodeSandboxService {
                 } else {
                     // 分批获取程序的异常输出
                     StringBuilder errorMessage = new StringBuilder();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream(), StandardCharsets.UTF_8));
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream(), "GBK"));
                     bufferedReader.lines().forEach(line -> errorMessage.append(line).append("\n"));
-                    // todo 返回参数设计
                     codeOutput.setInputExample(inputArgs);
                     codeOutput.setStdErrorMessage(errorMessage.toString()); // 输出错误信息
                     codeOutputList.add(codeOutput);
@@ -198,5 +278,6 @@ public class CodeSandboxServiceImpl implements CodeSandboxService {
         daemonThread.start();
         return out_time_flag.get();
     }
+
 
 }

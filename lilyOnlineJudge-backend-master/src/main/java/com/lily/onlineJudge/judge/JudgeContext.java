@@ -1,5 +1,6 @@
 package com.lily.onlineJudge.judge;
 
+import com.lily.onlineJudge.judge.codeSandbox.model.dto.CodeOutput;
 import com.lily.onlineJudge.judge.codeSandbox.model.dto.JudgeInfo;
 import com.lily.onlineJudge.model.entity.JudgeCase;
 import com.lily.onlineJudge.model.entity.Question;
@@ -28,7 +29,7 @@ public class JudgeContext {
     /**
      * 用例输出列表
      */
-    private List<String> codeOutput;
+    private List<CodeOutput> codeOutput;
 
     /**
      * 用例输出列表

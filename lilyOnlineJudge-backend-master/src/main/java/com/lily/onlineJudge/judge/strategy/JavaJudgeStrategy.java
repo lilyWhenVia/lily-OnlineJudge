@@ -1,41 +1,43 @@
 package com.lily.onlineJudge.judge.strategy;
 
 import cn.hutool.json.JSONUtil;
+import com.lily.onlineJudge.common.ErrorCode;
+import com.lily.onlineJudge.exception.BusinessException;
 import com.lily.onlineJudge.judge.JudgeContext;
+import com.lily.onlineJudge.judge.codeSandbox.common.ExecuteStatusEnum;
+import com.lily.onlineJudge.judge.codeSandbox.model.dto.CodeOutput;
 import com.lily.onlineJudge.judge.codeSandbox.model.dto.JudgeInfo;
 import com.lily.onlineJudge.model.entity.JudgeCase;
 import com.lily.onlineJudge.model.entity.JudgeConfig;
 import com.lily.onlineJudge.model.entity.Question;
 import com.lily.onlineJudge.model.entity.QuestionSubmit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by lily via on 2024/4/9 11:46
  */
+@Slf4j
 public class JavaJudgeStrategy implements JudgeStrategy{
     @Override
     public JudgeInfo doJudge(JudgeContext context) {
         // 1.
-        List<String> inputList = context.getInputList();
-        String language = context.getLanguage();
-        List<String> codeOutput = context.getCodeOutput();
+        List<CodeOutput> codeOutput = context.getCodeOutput();
         String codeSandboxMes = context.getCodeSandboxMes();
         Integer codeSandboxStatus = context.getCodeSandboxStatus();
         JudgeInfo judgeInfo = context.getJudgeInfo();
-        List<JudgeCase> judgeCaseList = context.getJudgeCaseList();
         List<String> standerOutput = context.getStanderOutput();
         Question question = context.getQuestion();
-        QuestionSubmit questionSubmit = context.getQuestionSubmit();
 
-        // 1.1. 确认沙箱正确执行完毕
-        if (!codeSandboxMes.equals("succeed")){
-            throw new RuntimeException("代码执行异常： {}"+codeSandboxMes);
+        if (codeOutput == null || codeOutput.isEmpty()) {
+            return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
         }
-        // 1.2根据代码沙箱返回值设置校验逻辑
-        if (codeSandboxStatus==2){
-            throw new RuntimeException("代码执行异常： {}"+codeSandboxStatus);
+        if (judgeInfo == null) {
+            return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
         }
         // 2. 校验运行参数限制
         String judgeConfig = question.getJudgeConfig();
@@ -43,31 +45,48 @@ public class JavaJudgeStrategy implements JudgeStrategy{
         Long timeLimit = configBean.getTimeLimit();
         Long memoryLimit = configBean.getMemoryLimit();
         Long stackLimit = configBean.getStackLimit();
-        // 2.1 info
+
+        // 2.1 info  todo 判空校验
         String message = judgeInfo.getMessage();
         Long time = judgeInfo.getTime();
         Long memory = judgeInfo.getMemory();
         Long stack = judgeInfo.getStack();
 
-        if (timeLimit>time){
-            throw new RuntimeException("运行超时");
-        }
-        if (memoryLimit>memory){
-            throw new RuntimeException("内存超限");
-        }
-        if (stackLimit>stack){
-            throw new RuntimeException("栈溢出");
-        }
-        // 3. 检查输出
-        for (int i = 0; i < standerOutput.size(); i++) {
-            for (int j = 0; j < codeOutput.size(); j++) {
-                if (!StringUtils.equals(standerOutput.get(i),codeOutput.get(j))){
-                    // todo
-                    throw new RuntimeException("第"+j+"个输出有误");
+        // 1.1. 判断沙箱是否异常
+        if (ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus() == codeSandboxStatus) {// 1.2根据代码沙箱返回值设置校验逻辑
+            // todo 判空校验
+            List<String> errorMessage = codeOutput.stream().map(CodeOutput::getStdErrorMessage).collect(Collectors.toList());
+            // 检查执行过程中是否有用例错误  errorMessage全是null
+            boolean allNull = errorMessage.stream().allMatch(Objects::isNull);
+            if (allNull) {
+                if (timeLimit-10 < time) {
+                    return new JudgeInfo(ExecuteStatusEnum.RUN_TIMEOUT.getStatusName(), time, memory, stack);
                 }
+                if (memoryLimit < memory) {
+                    return new JudgeInfo(ExecuteStatusEnum.MEMORY_LIMIT_EXCEEDED.getStatusName(), time, memory, stack);
+                }
+                if (stackLimit < stack) {
+                    return new JudgeInfo(ExecuteStatusEnum.RUN_TIMEOUT.getStatusName(), time, memory, stack);
+                }
+                // 3. 检查输出
+                if (standerOutput.size() != codeOutput.size()) {
+                    return new JudgeInfo("输出个数不一致", time, memory, stack);
+                }
+                for (int i = 0; i < standerOutput.size(); i++) {
+                        if (!StringUtils.equals(standerOutput.get(i), codeOutput.get(i).getStdoutMessage())) {
+                            // todo
+                            return new JudgeInfo("第" + (i+1) + "个输出有误。用例输出"+codeOutput.get(i), time, memory, stack);
+                    }
+                }
+                // todo
+                return new JudgeInfo("Accept", time, memory, stack);
+            } else {
+                return new JudgeInfo("执行异常：" + errorMessage, time, memory, stack);
             }
+        } else {
+            log.error("codeSandboxMes:{}", codeSandboxMes);
+            // 编译失败，运行失败等
+            return new JudgeInfo(codeSandboxMes, time, memory, stack);
         }
-        // todo
-        return new JudgeInfo("succeed", time, memory, stack);
     }
 }

@@ -11,6 +11,8 @@ import com.lily.onlineJudge.judge.JudgeService;
 import com.lily.onlineJudge.judge.codeSandbox.CodeSandbox;
 import com.lily.onlineJudge.judge.codeSandbox.CodeSandboxFactory;
 import com.lily.onlineJudge.judge.codeSandbox.CodeSandboxProxy;
+import com.lily.onlineJudge.judge.codeSandbox.common.ExecuteStatusEnum;
+import com.lily.onlineJudge.judge.codeSandbox.model.dto.CodeOutput;
 import com.lily.onlineJudge.judge.codeSandbox.model.dto.ExecuteCodeRequest;
 import com.lily.onlineJudge.judge.codeSandbox.model.dto.ExecuteCodeResponse;
 import com.lily.onlineJudge.judge.codeSandbox.model.dto.JudgeInfo;
@@ -89,7 +91,7 @@ public class JudgeServiceImpl implements JudgeService {
         CodeSandboxProxy codeSandboxProxy = new CodeSandboxProxy(codeSandbox);
         ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode(executeCodeRequest);
 //        5. 获取输出值
-        List<String> codeOutput = executeCodeResponse.getCodeOutput();
+        List<CodeOutput> codeOutput = executeCodeResponse.getCodeOutput();
         String codeSandboxMes = executeCodeResponse.getCodeSandboxMes();
         Integer codeSandboxStatus = executeCodeResponse.getCodeSandboxStatus();
         JudgeInfo judgeInfo = executeCodeResponse.getJudgeInfo();
@@ -105,13 +107,18 @@ public class JudgeServiceImpl implements JudgeService {
         judgeContext.setJudgeCaseList(judgeCaseList);
         judgeContext.setQuestion(question);
         judgeContext.setQuestionSubmit(questionSubmit);
-//        6.1. 校验输出值
-        judgeManager.doJudge(judgeContext);
+//        6.1. 校验代码沙箱返回值
+        JudgeInfo doneJudge = judgeManager.doJudge(judgeContext);
 //        7. 判题状态更改， 判题结果存入数据库中
         QuestionSubmit succeedQueSub = new QuestionSubmit();
         succeedQueSub.setId(questionSubmitId);
-        succeedQueSub.setStatus(StatusConstant.SUCCEED);
-        String infoString = JSONUtil.toJsonStr(judgeInfo);
+        // 7.1 成功判题结束
+        if (codeSandboxStatus== ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus()){
+            succeedQueSub.setStatus(StatusConstant.SUCCEED);
+        }else{
+            succeedQueSub.setStatus(StatusConstant.FAILED);
+        }
+        String infoString = JSONUtil.toJsonStr(doneJudge);
         succeedQueSub.setJudgeInfo(infoString);
         boolean b = questionSubmitService.updateById(succeedQueSub);
         // todo

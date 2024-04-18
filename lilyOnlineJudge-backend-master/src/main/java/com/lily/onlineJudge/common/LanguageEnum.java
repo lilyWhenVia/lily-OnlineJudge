@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public enum LanguageEnum {
 
-    JAVA("java", "1.8", "JAVA"),
+    JAVA("JAVA", "1.8", "JAVA"),
     CPP("cplusplus", "1.5", "C++"),
     GOLANG("golang", "", "golang"),
     JAVASCRIPT("javascript", "", "javascript"),

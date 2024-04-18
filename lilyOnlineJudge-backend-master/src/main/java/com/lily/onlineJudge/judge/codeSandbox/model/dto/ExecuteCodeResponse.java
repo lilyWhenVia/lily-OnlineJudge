@@ -1,6 +1,8 @@
 package com.lily.onlineJudge.judge.codeSandbox.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -9,12 +11,14 @@ import java.util.List;
  * Created by lily via on 2024/4/8 21:36
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExecuteCodeResponse {
 
     /**
      * 用例输出列表
      */
-    private List<String> codeOutput;
+    private List<CodeOutput> codeOutput;
 
     /**
      * 接口执行信息

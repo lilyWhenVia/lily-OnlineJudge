@@ -10,6 +10,4 @@ public class NativeCodeSandboxApplication {
         SpringApplication.run(NativeCodeSandboxApplication.class, args);
     }
 
-
-
 }
