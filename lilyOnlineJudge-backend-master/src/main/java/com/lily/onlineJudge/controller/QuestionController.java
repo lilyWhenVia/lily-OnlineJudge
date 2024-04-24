@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * 题目接口
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @RestController
 @RequestMapping("/question")

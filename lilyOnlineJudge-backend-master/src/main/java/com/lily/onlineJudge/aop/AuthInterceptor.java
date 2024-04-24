@@ -20,7 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * 权限校验 AOP
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Aspect
 @Component

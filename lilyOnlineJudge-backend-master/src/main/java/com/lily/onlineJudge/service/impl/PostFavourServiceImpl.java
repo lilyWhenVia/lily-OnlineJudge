@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 帖子收藏服务实现
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Service
 public class PostFavourServiceImpl extends ServiceImpl<PostFavourMapper, PostFavour>

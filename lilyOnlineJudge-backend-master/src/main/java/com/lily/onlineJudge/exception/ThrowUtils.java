@@ -5,7 +5,7 @@ import com.lily.onlineJudge.common.ErrorCode;
 /**
  * 抛异常工具类
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public class ThrowUtils {
 

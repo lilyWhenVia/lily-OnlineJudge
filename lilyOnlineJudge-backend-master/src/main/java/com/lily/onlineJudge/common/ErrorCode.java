@@ -3,7 +3,7 @@ package com.lily.onlineJudge.common;
 /**
  * 自定义错误码
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public enum ErrorCode {
 

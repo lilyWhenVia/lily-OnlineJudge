@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ObjectUtils;
 /**
  * 用户角色枚举
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public enum UserRoleEnum {
 

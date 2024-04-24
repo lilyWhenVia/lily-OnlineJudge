@@ -13,7 +13,7 @@ import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 /**
  * 用户服务
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public interface UserService extends IService<User> {
 

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ObjectUtils;
 /**
  * 文件上传业务类型枚举
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public enum FileUploadBizEnum {
 

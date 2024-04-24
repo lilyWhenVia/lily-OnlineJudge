@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * SQL 工具
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public class SqlUtils {
 

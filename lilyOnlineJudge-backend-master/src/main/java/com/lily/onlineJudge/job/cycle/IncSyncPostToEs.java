@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 /**
  * 增量同步帖子到 es
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 // todo 取消注释开启任务
 //@Component

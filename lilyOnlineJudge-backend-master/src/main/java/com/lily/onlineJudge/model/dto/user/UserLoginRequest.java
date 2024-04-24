@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 用户登录请求
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Data
 public class UserLoginRequest implements Serializable {

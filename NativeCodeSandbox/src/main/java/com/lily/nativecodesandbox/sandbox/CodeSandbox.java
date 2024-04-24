@@ -9,5 +9,4 @@ import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 public interface CodeSandbox {
     ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest);
 
-
 }

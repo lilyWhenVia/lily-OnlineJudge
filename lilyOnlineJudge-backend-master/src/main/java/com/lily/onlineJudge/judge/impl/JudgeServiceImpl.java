@@ -55,8 +55,8 @@ public class JudgeServiceImpl implements JudgeService {
     public void doJudge(Long questionSubmitId) {
 //        1. 从数据查询提交记录，判断判题状态
         QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
-        if (questionSubmit == null){
-
+        if (questionSubmit == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
 //        2. 参数校验
         String language = questionSubmit.getLanguage();
@@ -66,7 +66,7 @@ public class JudgeServiceImpl implements JudgeService {
         Long questionId = questionSubmit.getQuestionId();
         ThrowUtils.throwIf(StringUtils.isEmpty(language), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StringUtils.isEmpty(code), ErrorCode.PARAMS_ERROR);
-        ThrowUtils.throwIf(status==null||StatusConstant.SUCCEED == status, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(status == null || StatusConstant.SUCCEED == status, ErrorCode.PARAMS_ERROR);
 //        3. 更改判题状态为判题中
         QuestionSubmit submitStatus = new QuestionSubmit();
         submitStatus.setId(id);
@@ -74,7 +74,7 @@ public class JudgeServiceImpl implements JudgeService {
         questionSubmitService.updateById(submitStatus);
 //        4. 查询根据questionId获取题目相关信息，构造代码沙箱运行需要参数
         Question question = questionService.getById(questionId);
-        if (question == null){
+        if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "questionId不存在");
         }
         String judgeCase = question.getJudgeCase();
@@ -113,16 +113,16 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit succeedQueSub = new QuestionSubmit();
         succeedQueSub.setId(questionSubmitId);
         // 7.1 成功判题结束
-        if (codeSandboxStatus== ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus()){
+        if (codeSandboxStatus == ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus()) {
             succeedQueSub.setStatus(StatusConstant.SUCCEED);
-        }else{
+        } else {
             succeedQueSub.setStatus(StatusConstant.FAILED);
         }
         String infoString = JSONUtil.toJsonStr(doneJudge);
         succeedQueSub.setJudgeInfo(infoString);
         boolean b = questionSubmitService.updateById(succeedQueSub);
         // todo
-        if (!b){
+        if (!b) {
             log.error("QuestionSubmit SUCCEED status update failed");
             throw new RuntimeException("QuestionSubmit SUCCEED status update failed");
         }

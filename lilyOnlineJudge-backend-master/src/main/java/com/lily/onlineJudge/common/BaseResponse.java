@@ -7,7 +7,7 @@ import lombok.Data;
  * 通用返回类
  *
  * @param <T>
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Data
 public class BaseResponse<T> implements Serializable {

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 帖子 ES 包装类
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  **/
 // todo 取消注释开启 ES（须先配置 ES）
 //@Document(indexName = "post")

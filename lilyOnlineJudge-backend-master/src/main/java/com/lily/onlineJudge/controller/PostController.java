@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 帖子接口
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @RestController
 @RequestMapping("/post")

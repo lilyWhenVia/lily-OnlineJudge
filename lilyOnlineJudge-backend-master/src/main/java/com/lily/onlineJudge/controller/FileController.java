@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 文件接口
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @RestController
 @RequestMapping("/file")

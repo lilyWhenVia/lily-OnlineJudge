@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * Cos 对象存储操作
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Component
 public class CosManager {

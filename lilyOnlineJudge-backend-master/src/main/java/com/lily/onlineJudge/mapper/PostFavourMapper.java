@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 帖子收藏数据库操作
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 public interface PostFavourMapper extends BaseMapper<PostFavour> {
 

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 微信公众号路由
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Configuration
 public class WxMpMsgRouter {

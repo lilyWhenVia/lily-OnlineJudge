@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 腾讯云对象存储客户端
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Configuration
 @ConfigurationProperties(prefix = "cos.client")

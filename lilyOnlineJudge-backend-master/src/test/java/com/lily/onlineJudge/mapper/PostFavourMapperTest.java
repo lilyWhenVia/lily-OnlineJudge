@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * 帖子收藏数据库操作测试
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @SpringBootTest
 class PostFavourMapperTest {

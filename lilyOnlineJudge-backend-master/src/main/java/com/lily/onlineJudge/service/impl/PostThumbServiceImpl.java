@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 帖子点赞服务实现
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @Service
 public class PostThumbServiceImpl extends ServiceImpl<PostThumbMapper, PostThumb>

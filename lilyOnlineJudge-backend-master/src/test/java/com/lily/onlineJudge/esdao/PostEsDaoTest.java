@@ -18,7 +18,7 @@ import org.springframework.data.domain.Sort;
 /**
  * 帖子 ES 操作测试
  *
-* @author lily <a href="https://github.com/lilyWhenVia">作者github</a>
+* @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @SpringBootTest
 public class PostEsDaoTest {
