@@ -3,7 +3,10 @@ package com.lily.nativecodesandbox.controller;
 import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.sandbox.CodeSandbox;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.lily.nativecodesandbox.sandbox.JavaSandbox.JavaCodeSandbox;
+import com.lily.nativecodesandbox.sandbox.JavaSandbox.impl.JavaCodeSandboxImpl;
+import com.lily.nativecodesandbox.sandbox.dockerSandbox.DockerCodeSandbox;
+import com.lily.nativecodesandbox.sandbox.dockerSandbox.impl.DockerSandboxImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,21 +20,35 @@ import javax.annotation.Resource;
 public class codeController {
 
     @Resource
-    private CodeSandbox javaCodeSandboxImpl;
+    private JavaCodeSandbox javaCodeSandbox;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello, 世界!";
-    }
+    @Resource
+    private DockerCodeSandbox dockerCodeSandbox;
 
-    @PostMapping("/codeSandbox")
-    public ExecuteCodeResponse executeCode(@RequestBody ExecuteCodeRequest executeCodeRequest) {
+
+    @PostMapping("/javaCodeSandbox")
+    public ExecuteCodeResponse javaExecuteCode(@RequestBody ExecuteCodeRequest executeCodeRequest) {
         // todo 鉴权
         String language = executeCodeRequest.getLanguage();
         ExecuteCodeResponse executeCodeResponse;
-        if ("JAVA".equals(language)) {
+        if ("JAVA".equalsIgnoreCase(language)) {
             // todo 内部异常处理后统一返回携带异常信息的ExecuteCodeResponse
-            executeCodeResponse = javaCodeSandboxImpl.executeCode(executeCodeRequest);
+            executeCodeResponse = javaCodeSandbox.executeCode(executeCodeRequest);
+        }else {
+            // todo 调用可执行其他语言的沙箱
+            return null;
+        }
+        return executeCodeResponse;
+    }
+
+    @PostMapping("/dockerCodeSandbox")
+    public ExecuteCodeResponse dockerExecuteCode(@RequestBody ExecuteCodeRequest executeCodeRequest) {
+        // todo 鉴权
+        String language = executeCodeRequest.getLanguage();
+        ExecuteCodeResponse executeCodeResponse;
+        if ("JAVA".equalsIgnoreCase(language)) {
+            // todo 内部异常处理后统一返回携带异常信息的ExecuteCodeResponse
+            executeCodeResponse = dockerCodeSandbox.executeCode(executeCodeRequest);
         }else {
             // todo 调用可执行其他语言的沙箱
             return null;

@@ -1,4 +1,4 @@
-package com.lily.nativecodesandbox.sandbox.JavaSandbox;
+package com.lily.nativecodesandbox.sandbox.JavaSandbox.impl;
 
 import com.lily.nativecodesandbox.sandbox.CodeSandboxTemplate;
 import com.lily.nativecodesandbox.common.ExecuteStatusEnum;
@@ -7,6 +7,7 @@ import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.model.JudgeInfo;
 import com.lily.nativecodesandbox.sandbox.CodeSandbox;
+import com.lily.nativecodesandbox.sandbox.JavaSandbox.JavaCodeSandbox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -23,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Slf4j
 @Component
-public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements CodeSandbox {
+public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCodeSandbox {
 
     public static void main(String[] args) {
         JavaCodeSandboxImpl javaCodeSandboxImpl = new JavaCodeSandboxImpl();

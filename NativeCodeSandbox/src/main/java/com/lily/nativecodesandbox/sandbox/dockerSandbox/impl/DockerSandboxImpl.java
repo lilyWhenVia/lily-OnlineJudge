@@ -1,4 +1,4 @@
-package com.lily.nativecodesandbox.sandbox.dockerSandbox;
+package com.lily.nativecodesandbox.sandbox.dockerSandbox.impl;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.github.dockerjava.api.DockerClient;
@@ -15,6 +15,7 @@ import com.lily.nativecodesandbox.model.CodeOutput;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.model.JudgeInfo;
 import com.lily.nativecodesandbox.sandbox.CodeSandbox;
+import com.lily.nativecodesandbox.sandbox.dockerSandbox.DockerCodeSandbox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static com.lily.nativecodesandbox.Once.FirstInitJob.InitContainer;
 import static com.lily.nativecodesandbox.Once.FirstInitJob.containerId;
 
 /**
@@ -35,7 +35,7 @@ import static com.lily.nativecodesandbox.Once.FirstInitJob.containerId;
  */
 @Slf4j
 @Component
-public class DockerSandboxImpl extends CodeSandboxTemplate implements CodeSandbox {
+public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCodeSandbox {
 
     // ------------------------docker配置------------------------
     @Value("${Docker.host:192.168.70.130}")
