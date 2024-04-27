@@ -30,7 +30,7 @@ spring:
             - Path=/api/user/**
 server:
   address: 0.0.0.0
-  port: 8101
+  port: 8100
 # 聚合接口文档配置
 knife4j:
   gateway:
