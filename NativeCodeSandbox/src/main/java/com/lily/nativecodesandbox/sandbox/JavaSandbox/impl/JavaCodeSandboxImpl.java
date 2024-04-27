@@ -118,7 +118,7 @@ public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCode
         judgeInfo.setTime(maxTime);
         judgeInfo.setMemory(256L);
         judgeInfo.setStack(0L);
-        judgeInfo.setMessage("execute success");
+        judgeInfo.setMessage(ExecuteStatusEnum.RUN_SUCCESS.getStatusName());
         executeCodeResponse.setJudgeInfo(judgeInfo);
         return executeCodeResponse;
     }

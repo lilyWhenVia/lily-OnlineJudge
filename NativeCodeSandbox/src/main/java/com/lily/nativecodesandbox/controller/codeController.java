@@ -26,7 +26,7 @@ public class codeController {
     private DockerCodeSandbox dockerCodeSandbox;
 
 
-    @PostMapping("/javaCodeSandbox")
+    @PostMapping("/java")
     public ExecuteCodeResponse javaExecuteCode(@RequestBody ExecuteCodeRequest executeCodeRequest) {
         // todo 鉴权
         String language = executeCodeRequest.getLanguage();
@@ -41,7 +41,7 @@ public class codeController {
         return executeCodeResponse;
     }
 
-    @PostMapping("/dockerCodeSandbox")
+    @PostMapping("/docker")
     public ExecuteCodeResponse dockerExecuteCode(@RequestBody ExecuteCodeRequest executeCodeRequest) {
         // todo 鉴权
         String language = executeCodeRequest.getLanguage();

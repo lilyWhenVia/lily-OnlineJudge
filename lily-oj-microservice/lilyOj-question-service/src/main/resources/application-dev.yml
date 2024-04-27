@@ -24,6 +24,16 @@ spring:
     host: 192.168.70.130
     timeout: 5000
     port: 6379
+    # rabbitmq配置
+  rabbitmq:
+    port: 5672
+    host: localhost
+    username: guest
+    password: guest
+    listener:
+      simple:
+        # ACK模式(默认为auto)
+        acknowledge-mode: auto
   # 文件上传
   servlet:
     multipart:

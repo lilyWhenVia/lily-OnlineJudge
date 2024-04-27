@@ -20,12 +20,12 @@ import com.lily.lilyojmodel.model.vo.QuestionSubmitVO;
 import com.lily.lilyojmodel.model.vo.QuestionVO;
 import com.lily.lilyojmodel.model.vo.UserVO;
 import com.lily.lilyojquestionservice.mapper.QuestionSubmitMapper;
+import com.lily.lilyojquestionservice.rabbitmq.QuestionSubmitProducer;
 import com.lily.lilyojquestionservice.service.QuestionService;
 import com.lily.lilyojquestionservice.service.QuestionSubmitService;
 import com.lily.lilyojserviceclient.service.JudgeFeignClient;
 import com.lily.lilyojserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -35,7 +35,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * @author lily
@@ -53,8 +52,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private QuestionService questionService;
 
+//
+//    @Resource
+//    private JudgeFeignClient judgeService;
+
     @Resource
-    private JudgeFeignClient judgeService;
+    private QuestionSubmitProducer questionSubmitProducer;
 
     /**
      * 代码提交
@@ -90,10 +93,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         }
         Long questionSubmitId = questionSubmit.getId();
         // 3. 异步处理代码运行等操作
-        CompletableFuture.runAsync(()->{
-            // 移交判题模块（判题模块调用代码沙箱）
-            judgeService.doJudge(questionSubmitId);
-        });
+        questionSubmitProducer.sendMessage(String.valueOf(questionSubmitId));
+//        CompletableFuture.runAsync(()->{
+//            // 移交判题模块（判题模块调用代码沙箱）
+//            judgeService.doJudge(questionSubmitId);
+//        });
         // 4. 返回插入数据库成功信息
         return questionSubmitId;
     }

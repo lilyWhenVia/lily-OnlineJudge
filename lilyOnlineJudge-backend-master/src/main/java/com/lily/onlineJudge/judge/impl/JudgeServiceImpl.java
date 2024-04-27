@@ -67,7 +67,7 @@ public class JudgeServiceImpl implements JudgeService {
         ThrowUtils.throwIf(StringUtils.isEmpty(language), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StringUtils.isEmpty(code), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(status == null || StatusConstant.SUCCEED == status, ErrorCode.PARAMS_ERROR);
-//        3. 更改判题状态为判题中
+        //        3. 更改判题状态为判题中
         QuestionSubmit submitStatus = new QuestionSubmit();
         submitStatus.setId(id);
         submitStatus.setStatus(StatusConstant.EXECUTE);

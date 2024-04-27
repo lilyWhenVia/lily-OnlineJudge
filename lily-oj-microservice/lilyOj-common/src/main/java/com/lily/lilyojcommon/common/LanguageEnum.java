@@ -25,5 +25,13 @@ public enum LanguageEnum {
 
     private String message;
 
+    public static Boolean isLanguageEnum(String name) {
+        for (LanguageEnum languageEnum : LanguageEnum.values()) {
+            if (languageEnum.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

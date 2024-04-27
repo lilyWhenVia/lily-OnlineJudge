@@ -142,7 +142,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             questionSubmitVO.setQuestionVO(questionVO);
         }
 
-        return null;
+        return questionSubmitVO;
     }
 
     // todo stream方法，少查数据库

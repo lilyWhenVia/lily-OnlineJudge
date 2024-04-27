@@ -2,7 +2,7 @@ package com.lily.nativecodesandbox.dockerSandbox;
 
 import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
-import com.lily.nativecodesandbox.sandbox.dockerSandbox.DockerSandboxImpl;
+import com.lily.nativecodesandbox.sandbox.dockerSandbox.impl.DockerSandboxImpl;
 
 import java.util.List;
 

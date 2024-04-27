@@ -20,7 +20,7 @@ public class JudgeManager implements JudgeStrategy {
     public JudgeInfo doJudge(JudgeContext context) {
         String language = context.getLanguage();
         JudgeStrategy judgeStrategy = new DefaultJudgeStrategy();
-        if (LanguageEnum.JAVA.getName().equals(language)){
+        if (LanguageEnum.JAVA.getName().equalsIgnoreCase(language)){
             judgeStrategy = new JavaJudgeStrategy();
         }
         return judgeStrategy.doJudge(context);
