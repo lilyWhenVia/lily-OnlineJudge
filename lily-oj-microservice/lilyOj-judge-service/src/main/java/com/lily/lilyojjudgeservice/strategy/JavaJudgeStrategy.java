@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class JavaJudgeStrategy implements JudgeStrategy{
+
     @Override
     public JudgeInfo doJudge(JudgeContext context) {
         // 1.
         List<CodeOutput> codeOutput = context.getCodeOutput();
         String codeSandboxMes = context.getCodeSandboxMes();
-        Integer codeSandboxStatus = context.getCodeSandboxStatus();
         JudgeInfo judgeInfo = context.getJudgeInfo();
         List<String> standerOutput = context.getStanderOutput();
         Question question = context.getQuestion();
@@ -48,9 +48,9 @@ public class JavaJudgeStrategy implements JudgeStrategy{
         Long memory = judgeInfo.getMemory();
         Long stack = judgeInfo.getStack();
 
-        // 1.1. 判断沙箱是否异常
-        if (ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus() == codeSandboxStatus) {// 1.2根据代码沙箱返回值设置校验逻辑
-            // todo 判空校验
+        // 1.1. 判断沙箱运行是否异常
+        if (StringUtils.equals(ExecuteStatusEnum.RUN_SUCCESS.getStatusName(), message)) {// 1.2根据代码沙箱返回值设置校验逻辑
+
             List<String> errorMessage = codeOutput.stream().map(CodeOutput::getStdErrorMessage).collect(Collectors.toList());
             // 检查执行过程中是否有用例错误  errorMessage全是null
             boolean allNull = errorMessage.stream().allMatch(Objects::isNull);
@@ -75,9 +75,9 @@ public class JavaJudgeStrategy implements JudgeStrategy{
                     }
                 }
                 // todo
-                return new JudgeInfo("Accept", time, memory, stack);
+                return new JudgeInfo(ExecuteStatusEnum.RUN_SUCCESS.getStatusName(), time, memory, stack);
             } else {
-                return new JudgeInfo("执行异常：" + errorMessage, time, memory, stack);
+                return new JudgeInfo(ExecuteStatusEnum.RUN_FAIL.getStatusName() +" :"+ errorMessage, time, memory, stack);
             }
         } else {
             log.error("codeSandboxMes:{}", codeSandboxMes);

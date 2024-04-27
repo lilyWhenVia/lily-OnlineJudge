@@ -1,6 +1,7 @@
 package com.lily.lilyojjudgeservice.judge;
 import com.lily.lilyojcommon.common.LanguageEnum;
 import com.lily.lilyojjudgeservice.strategy.DefaultJudgeStrategy;
+import com.lily.lilyojjudgeservice.strategy.GolangJudgeStrategy;
 import com.lily.lilyojjudgeservice.strategy.JavaJudgeStrategy;
 import com.lily.lilyojjudgeservice.strategy.JudgeStrategy;
 import com.lily.lilyojmodel.model.dto.judge.JudgeInfo;
@@ -18,9 +19,13 @@ public class JudgeManager implements JudgeStrategy {
     @Override
     public JudgeInfo doJudge(JudgeContext context) {
         String language = context.getLanguage();
-        JudgeStrategy judgeStrategy = new DefaultJudgeStrategy();
-        if (LanguageEnum.JAVA.getName().equals(language)){
+        JudgeStrategy judgeStrategy;
+        if (LanguageEnum.JAVA.getName().equalsIgnoreCase(language)){
             judgeStrategy = new JavaJudgeStrategy();
+        } else if (LanguageEnum.GOLANG.getName().equalsIgnoreCase(language)) {
+            judgeStrategy = new GolangJudgeStrategy();
+        }else {
+            judgeStrategy = new DefaultJudgeStrategy();
         }
         return judgeStrategy.doJudge(context);
     }

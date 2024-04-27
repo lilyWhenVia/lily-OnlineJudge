@@ -4,10 +4,13 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.lily.lilyojcommon.common.ErrorCode;
+import com.lily.lilyojcommon.common.ExecuteStatusEnum;
+import com.lily.lilyojcommon.common.SandboxErrorCode;
 import com.lily.lilyojjudgeservice.codeSandbox.CodeSandbox;
 import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeRequest;
 import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -27,15 +30,24 @@ public class RemoteCodeSandbox implements CodeSandbox {
         HttpResponse response = HttpUtil.createPost(remoteCodeSandboxUrl)
                 .body(JSONUtil.toJsonStr(executeCodeRequest))
                 .execute();
-        if (response.getStatus() != 200){
-            return new ExecuteCodeResponse(null, "调用代码沙箱失败", ErrorCode.SYSTEM_ERROR.getCode(), null);
+        // 获取返回结果
+        ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        if (response.getStatus() == HttpStatus.NOT_FOUND.value()){
+            executeCodeResponse.setCodeSandboxMes(SandboxErrorCode.CODESANDBOX_NOT_FOUND.getMessage());
+            executeCodeResponse.setCodeSandboxStatus(SandboxErrorCode.CODESANDBOX_NOT_FOUND.getCode());
+            return executeCodeResponse;
+        } else if (response.getStatus() == HttpStatus.FORBIDDEN.value()){
+            executeCodeResponse.setCodeSandboxMes(SandboxErrorCode.FORBIDDEN_ERROR.getMessage());
+            executeCodeResponse.setCodeSandboxStatus(SandboxErrorCode.FORBIDDEN_ERROR.getCode());
+            return executeCodeResponse;
         }
         String body = response.body();
-        if (StringUtils.isEmpty(body)){
-            // todo 异常处理，更改数据库信息
-            return new ExecuteCodeResponse(null, "调用代码沙箱失败",ErrorCode.SYSTEM_ERROR.getCode(), null);
+        if (body==null || StringUtils.isEmpty(body)){
+            executeCodeResponse.setCodeSandboxMes(SandboxErrorCode.SYSTEM_ERROR.getMessage());
+            executeCodeResponse.setCodeSandboxStatus(SandboxErrorCode.SYSTEM_ERROR.getCode());
+            return executeCodeResponse;
         }
-        ExecuteCodeResponse executeCodeResponse = JSONUtil.toBean(body, ExecuteCodeResponse.class);
+        executeCodeResponse = JSONUtil.toBean(body, ExecuteCodeResponse.class);
         return executeCodeResponse;
     }
 }

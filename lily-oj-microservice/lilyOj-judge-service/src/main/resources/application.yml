@@ -48,4 +48,5 @@ knife4j:
   enable: true
 
 codeSandbox:
-  type: example
+  type: remote
+  url: http://localhost:8080/codeSandbox

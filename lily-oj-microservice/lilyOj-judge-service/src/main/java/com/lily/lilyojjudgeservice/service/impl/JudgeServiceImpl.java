@@ -4,8 +4,10 @@ import cn.hutool.json.JSONUtil;
 import com.lily.lilyojcommon.common.ErrorCode;
 import com.lily.lilyojcommon.common.ExecuteStatusEnum;
 import com.lily.lilyojcommon.common.LanguageEnum;
+import com.lily.lilyojcommon.common.SandboxErrorCode;
 import com.lily.lilyojcommon.constant.StatusConstant;
 import com.lily.lilyojcommon.exception.BusinessException;
+import com.lily.lilyojcommon.exception.CodeSandboxException;
 import com.lily.lilyojcommon.exception.ThrowUtils;
 import com.lily.lilyojjudgeservice.codeSandbox.CodeSandbox;
 import com.lily.lilyojjudgeservice.codeSandbox.CodeSandboxFactory;
@@ -37,10 +39,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JudgeServiceImpl implements JudgeService {
 
-
-//    @Resource
-//    @Lazy
-//    private QuestionSubmitFeignClient questionSubmitService;
     @Resource
     private QuestionFeignClient questionService;
 
@@ -93,10 +91,15 @@ public class JudgeServiceImpl implements JudgeService {
         // 5.2 使用代理类增强沙箱实例的执行方法
         CodeSandboxProxy codeSandboxProxy = new CodeSandboxProxy(codeSandbox);
         ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode(executeCodeRequest);
+//        5.1 沙箱调用状态判断
+        Integer codeSandboxStatus = executeCodeResponse.getCodeSandboxStatus();
+        if (codeSandboxStatus == SandboxErrorCode.CODESANDBOX_NOT_FOUND.getCode() || codeSandboxStatus == SandboxErrorCode.FORBIDDEN_ERROR.getCode() || codeSandboxStatus == SandboxErrorCode.SYSTEM_ERROR.getCode()){
+            handledCodeSandboxError(questionSubmitId, StatusConstant.FAILED);
+            return;
+        }
 //        5. 获取输出值
         List<CodeOutput> codeOutput = executeCodeResponse.getCodeOutput();
         String codeSandboxMes = executeCodeResponse.getCodeSandboxMes();
-        Integer codeSandboxStatus = executeCodeResponse.getCodeSandboxStatus();
         JudgeInfo judgeInfo = executeCodeResponse.getJudgeInfo();
 //        6. 根据语言选择判题策略
         JudgeContext judgeContext = new JudgeContext();
@@ -116,7 +119,7 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit succeedQueSub = new QuestionSubmit();
         succeedQueSub.setId(questionSubmitId);
         // 7.1 成功判题结束
-        if (codeSandboxStatus == ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus()) {
+        if (StringUtils.equals(judgeInfo.getMessage(),ExecuteStatusEnum.RUN_SUCCESS.getStatusName())) {
             succeedQueSub.setStatus(StatusConstant.SUCCEED);
         } else {
             succeedQueSub.setStatus(StatusConstant.FAILED);
@@ -124,10 +127,21 @@ public class JudgeServiceImpl implements JudgeService {
         String infoString = JSONUtil.toJsonStr(doneJudge);
         succeedQueSub.setJudgeInfo(infoString);
         boolean b = questionService.updateById(succeedQueSub);
-        // todo
         if (!b) {
             log.error("QuestionSubmit SUCCEED status update failed");
             throw new RuntimeException("QuestionSubmit SUCCEED status update failed");
+        }
+    }
+
+    public void handledCodeSandboxError(Long questionSubmitId, Integer statue){
+        log.error("代码沙箱调用失败");
+        QuestionSubmit submitStatus = new QuestionSubmit();
+        submitStatus.setId(questionSubmitId);
+        submitStatus.setStatus(statue);
+        Boolean b = questionService.updateById(submitStatus);
+        if (!b) {
+            log.error("QuestionSubmit FAILED status update failed");
+            throw new RuntimeException("QuestionSubmit FAILED status update failed");
         }
     }
 }
