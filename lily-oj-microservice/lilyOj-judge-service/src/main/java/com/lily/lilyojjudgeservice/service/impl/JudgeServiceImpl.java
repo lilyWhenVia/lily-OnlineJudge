@@ -7,7 +7,6 @@ import com.lily.lilyojcommon.common.LanguageEnum;
 import com.lily.lilyojcommon.common.SandboxErrorCode;
 import com.lily.lilyojcommon.constant.StatusConstant;
 import com.lily.lilyojcommon.exception.BusinessException;
-import com.lily.lilyojcommon.exception.CodeSandboxException;
 import com.lily.lilyojcommon.exception.ThrowUtils;
 import com.lily.lilyojjudgeservice.codeSandbox.CodeSandbox;
 import com.lily.lilyojjudgeservice.codeSandbox.CodeSandboxFactory;
@@ -91,7 +90,7 @@ public class JudgeServiceImpl implements JudgeService {
         // 5.2 使用代理类增强沙箱实例的执行方法
         CodeSandboxProxy codeSandboxProxy = new CodeSandboxProxy(codeSandbox);
         ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode(executeCodeRequest);
-//        5.1 沙箱调用状态判断
+//        5.1 沙箱接口调用状态判断
         Integer codeSandboxStatus = executeCodeResponse.getCodeSandboxStatus();
         if (codeSandboxStatus == SandboxErrorCode.CODESANDBOX_NOT_FOUND.getCode() || codeSandboxStatus == SandboxErrorCode.FORBIDDEN_ERROR.getCode() || codeSandboxStatus == SandboxErrorCode.SYSTEM_ERROR.getCode()){
             handledCodeSandboxError(questionSubmitId, StatusConstant.FAILED);
@@ -133,8 +132,9 @@ public class JudgeServiceImpl implements JudgeService {
         }
     }
 
-    public void handledCodeSandboxError(Long questionSubmitId, Integer statue){
-        log.error("代码沙箱调用失败");
+    @Override
+    public Boolean handledCodeSandboxError(Long questionSubmitId, Integer statue){
+        log.error("判题失败");
         QuestionSubmit submitStatus = new QuestionSubmit();
         submitStatus.setId(questionSubmitId);
         submitStatus.setStatus(statue);
@@ -143,5 +143,6 @@ public class JudgeServiceImpl implements JudgeService {
             log.error("QuestionSubmit FAILED status update failed");
             throw new RuntimeException("QuestionSubmit FAILED status update failed");
         }
+        return b;
     }
 }

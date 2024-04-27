@@ -29,12 +29,6 @@ public class JavaJudgeStrategy implements JudgeStrategy{
         List<String> standerOutput = context.getStanderOutput();
         Question question = context.getQuestion();
 
-        if (codeOutput == null || codeOutput.isEmpty()) {
-            return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
-        }
-        if (judgeInfo == null) {
-            return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
-        }
         // 2. 校验运行参数限制
         String judgeConfig = question.getJudgeConfig();
         JudgeConfig configBean = JSONUtil.toBean(judgeConfig, JudgeConfig.class);
@@ -42,14 +36,22 @@ public class JavaJudgeStrategy implements JudgeStrategy{
         Long memoryLimit = configBean.getMemoryLimit();
         Long stackLimit = configBean.getStackLimit();
 
-        // 2.1 info  todo 判空校验
-        String message = judgeInfo.getMessage();
-        Long time = judgeInfo.getTime();
-        Long memory = judgeInfo.getMemory();
-        Long stack = judgeInfo.getStack();
-
         // 1.1. 判断沙箱运行是否异常
-        if (StringUtils.equals(ExecuteStatusEnum.RUN_SUCCESS.getStatusName(), message)) {// 1.2根据代码沙箱返回值设置校验逻辑
+        if (StringUtils.equals(ExecuteStatusEnum.RUN_SUCCESS.getStatusName(), codeSandboxMes)) {// 1.2根据代码沙箱返回值设置校验逻辑
+
+            if (judgeInfo == null || StringUtils.isEmpty(judgeInfo.getMessage())) {
+                return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
+            }
+
+            // 2.1 info
+            String message = judgeInfo.getMessage();
+            Long time = judgeInfo.getTime();
+            Long memory = judgeInfo.getMemory();
+            Long stack = judgeInfo.getStack();
+
+            if (codeOutput == null || codeOutput.isEmpty()) {
+                return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
+            }
 
             List<String> errorMessage = codeOutput.stream().map(CodeOutput::getStdErrorMessage).collect(Collectors.toList());
             // 检查执行过程中是否有用例错误  errorMessage全是null
@@ -82,7 +84,7 @@ public class JavaJudgeStrategy implements JudgeStrategy{
         } else {
             log.error("codeSandboxMes:{}", codeSandboxMes);
             // 编译失败，运行失败等
-            return new JudgeInfo(codeSandboxMes, time, memory, stack);
+            return new JudgeInfo(codeSandboxMes, 0L, 0L, 0L);
         }
     }
 }

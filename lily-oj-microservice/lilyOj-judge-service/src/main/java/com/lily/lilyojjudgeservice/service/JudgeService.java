@@ -14,4 +14,6 @@ public interface JudgeService {
      * @param questionSubmitId
      */
     void doJudge(Long questionSubmitId);
+
+    Boolean handledCodeSandboxError(Long questionSubmitId, Integer statue);
 }

@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 public class RemoteCodeSandbox implements CodeSandbox {
 
     @Value("${codesandbox.url}")
-    private String remoteCodeSandboxUrl = "http://localhost:8080/javaCodeSandbox";
+    private String remoteCodeSandboxUrl = "http://localhost:8080/java";
 
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {

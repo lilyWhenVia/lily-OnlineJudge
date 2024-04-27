@@ -49,4 +49,4 @@ knife4j:
 
 codeSandbox:
   type: remote
-  url: http://localhost:8080/codeSandbox
+  url: http://localhost:8080/java
