@@ -1,8 +1,8 @@
 package com.lily.lilyojcommon.exception;
 
-import com.lily.onlineJudge.common.BaseResponse;
-import com.lily.onlineJudge.common.ErrorCode;
-import com.lily.onlineJudge.common.ResultUtils;
+import com.lily.lilyojcommon.common.BaseResponse;
+import com.lily.lilyojcommon.common.ErrorCode;
+import com.lily.lilyojcommon.common.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

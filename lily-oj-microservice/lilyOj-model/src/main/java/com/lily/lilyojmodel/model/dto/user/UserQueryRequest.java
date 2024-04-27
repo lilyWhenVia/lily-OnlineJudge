@@ -1,6 +1,6 @@
 package com.lily.lilyojmodel.model.dto.user;
 
-import com.lily.onlineJudge.common.PageRequest;
+import com.lily.lilyojcommon.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

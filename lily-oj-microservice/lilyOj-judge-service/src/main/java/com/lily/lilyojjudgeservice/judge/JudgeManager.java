@@ -1,8 +1,9 @@
 package com.lily.lilyojjudgeservice.judge;
-import com.lily.lilyojjudgeservice.codeSandbox.model.dto.JudgeInfo;
+import com.lily.lilyojcommon.common.LanguageEnum;
 import com.lily.lilyojjudgeservice.strategy.DefaultJudgeStrategy;
 import com.lily.lilyojjudgeservice.strategy.JavaJudgeStrategy;
 import com.lily.lilyojjudgeservice.strategy.JudgeStrategy;
+import com.lily.lilyojmodel.model.dto.judge.JudgeInfo;
 import org.springframework.stereotype.Service;
 
 

@@ -1,7 +1,7 @@
 package com.lily.lilyojjudgeservice.codeSandbox;
 
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.ExecuteCodeRequest;
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.ExecuteCodeResponse;
+import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeRequest;
+import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeResponse;
 import org.springframework.stereotype.Service;
 
 /**

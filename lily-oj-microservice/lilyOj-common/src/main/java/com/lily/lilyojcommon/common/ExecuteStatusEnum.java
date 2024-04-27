@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 代码沙箱执行状态枚举类
+ * 代码沙箱 执行状态 枚举类
  * Created by lily via on 2024/4/15 8:50
  */
 @AllArgsConstructor

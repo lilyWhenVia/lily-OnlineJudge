@@ -22,7 +22,7 @@ spring:
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
-    database: 1
+    database: 2
     host: 192.168.70.130
     timeout: 5000
     port: 6379
@@ -39,7 +39,7 @@ spring:
       max-file-size: 10MB
 server:
   address: 0.0.0.0
-  port: 8101
+  port: 8110
   servlet:
     context-path: /api
     # cookie 30 天过期

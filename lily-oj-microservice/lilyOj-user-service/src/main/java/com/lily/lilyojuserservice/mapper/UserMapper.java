@@ -1,7 +1,7 @@
 package com.lily.lilyojuserservice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lily.onlineJudge.model.entity.User;
+import com.lily.lilyojmodel.model.entity.User;
 
 /**
  * 用户数据库操作

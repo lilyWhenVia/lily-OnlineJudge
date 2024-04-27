@@ -1,6 +1,7 @@
 package com.lily.lilyojcommon.common;
 
 /**
+ * 代码沙箱系统错误码枚举类
  * Created by lily via on 2024/4/8 22:14
  */
 public enum SandboxErrorCode {

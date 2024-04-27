@@ -1,10 +1,10 @@
 package com.lily.lilyojjudgeservice.codeSandbox;
 
-import com.lily.onlineJudge.judge.codeSandbox.CodeSandboxImpl.ExampleCodeSandbox;
-import com.lily.onlineJudge.judge.codeSandbox.CodeSandboxImpl.RemoteCodeSandbox;
-import com.lily.onlineJudge.judge.codeSandbox.CodeSandboxImpl.ThirdPartyCodeSandbox;
-import com.lily.onlineJudge.judge.codeSandbox.common.SandboxErrorCode;
-import com.lily.onlineJudge.judge.codeSandbox.exception.CodeSandboxException;
+import com.lily.lilyojcommon.common.SandboxErrorCode;
+import com.lily.lilyojcommon.exception.CodeSandboxException;
+import com.lily.lilyojjudgeservice.codeSandbox.CodeSandboxImpl.ExampleCodeSandbox;
+import com.lily.lilyojjudgeservice.codeSandbox.CodeSandboxImpl.RemoteCodeSandbox;
+import com.lily.lilyojjudgeservice.codeSandbox.CodeSandboxImpl.ThirdPartyCodeSandbox;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

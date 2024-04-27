@@ -1,6 +1,7 @@
 package com.lily.lilyojcommon.exception;
 
-import com.lily.onlineJudge.common.ErrorCode;
+
+import com.lily.lilyojcommon.common.ErrorCode;
 
 /**
  * 抛异常工具类

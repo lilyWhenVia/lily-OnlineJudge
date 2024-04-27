@@ -1,12 +1,12 @@
 package com.lily.lilyojjudgeservice.strategy;
 
 import cn.hutool.json.JSONUtil;
-import com.lily.onlineJudge.judge.JudgeContext;
-import com.lily.onlineJudge.judge.codeSandbox.common.ExecuteStatusEnum;
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.CodeOutput;
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.JudgeInfo;
-import com.lily.onlineJudge.model.entity.JudgeConfig;
-import com.lily.onlineJudge.model.entity.Question;
+import com.lily.lilyojcommon.common.ExecuteStatusEnum;
+import com.lily.lilyojjudgeservice.judge.JudgeContext;
+import com.lily.lilyojmodel.model.dto.judge.CodeOutput;
+import com.lily.lilyojmodel.model.dto.judge.JudgeConfig;
+import com.lily.lilyojmodel.model.dto.judge.JudgeInfo;
+import com.lily.lilyojmodel.model.entity.Question;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 

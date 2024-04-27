@@ -2,25 +2,30 @@ package com.lily.lilyojquestionservice.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lily.onlineJudge.annotation.AuthCheck;
-import com.lily.onlineJudge.common.BaseResponse;
-import com.lily.onlineJudge.common.DeleteRequest;
-import com.lily.onlineJudge.common.ErrorCode;
-import com.lily.onlineJudge.common.ResultUtils;
-import com.lily.onlineJudge.constant.UserConstant;
-import com.lily.onlineJudge.exception.BusinessException;
-import com.lily.onlineJudge.exception.ThrowUtils;
-import com.lily.onlineJudge.model.dto.question.QuestionAddRequest;
-import com.lily.onlineJudge.model.dto.question.QuestionEditRequest;
-import com.lily.onlineJudge.model.dto.question.QuestionQueryRequest;
-import com.lily.onlineJudge.model.dto.question.QuestionUpdateRequest;
-import com.lily.onlineJudge.model.entity.JudgeCase;
-import com.lily.onlineJudge.model.entity.JudgeConfig;
-import com.lily.onlineJudge.model.entity.Question;
-import com.lily.onlineJudge.model.entity.User;
-import com.lily.onlineJudge.model.vo.QuestionVO;
-import com.lily.onlineJudge.service.QuestionService;
-import com.lily.onlineJudge.service.UserService;
+import com.lily.lilyojcommon.annotation.AuthCheck;
+import com.lily.lilyojcommon.common.BaseResponse;
+import com.lily.lilyojcommon.common.DeleteRequest;
+import com.lily.lilyojcommon.common.ErrorCode;
+import com.lily.lilyojcommon.common.ResultUtils;
+import com.lily.lilyojcommon.constant.UserConstant;
+import com.lily.lilyojcommon.exception.BusinessException;
+import com.lily.lilyojcommon.exception.ThrowUtils;
+import com.lily.lilyojmodel.model.dto.judge.JudgeCase;
+import com.lily.lilyojmodel.model.dto.judge.JudgeConfig;
+import com.lily.lilyojmodel.model.dto.question.QuestionAddRequest;
+import com.lily.lilyojmodel.model.dto.question.QuestionEditRequest;
+import com.lily.lilyojmodel.model.dto.question.QuestionQueryRequest;
+import com.lily.lilyojmodel.model.dto.question.QuestionUpdateRequest;
+import com.lily.lilyojmodel.model.dto.questionSubmit.QuestionSubmitAddRequest;
+import com.lily.lilyojmodel.model.dto.questionSubmit.QuestionSubmitQueryRequest;
+import com.lily.lilyojmodel.model.entity.Question;
+import com.lily.lilyojmodel.model.entity.QuestionSubmit;
+import com.lily.lilyojmodel.model.entity.User;
+import com.lily.lilyojmodel.model.vo.QuestionSubmitVO;
+import com.lily.lilyojmodel.model.vo.QuestionVO;
+import com.lily.lilyojquestionservice.service.QuestionService;
+import com.lily.lilyojquestionservice.service.QuestionSubmitService;
+import com.lily.lilyojserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +40,7 @@ import java.util.List;
 * @author lily <a href="https://github.com/lilyWhenVia">come to find lily</a>
  */
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/")
 @Slf4j
 public class QuestionController {
 
@@ -43,9 +48,12 @@ public class QuestionController {
     private QuestionService questionService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userService;
 
-    // region 增删改查
+    @Resource
+    private QuestionSubmitService questionSubmitService;
+
+    // region Question增删改查
 
     /**
      * 创建
@@ -224,24 +232,7 @@ public class QuestionController {
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
     }
 
-    // endregion
 
-    /**
-     * 分页搜索（从 ES 查询，封装类）
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
-    //     */
-    //    @PostMapping("/search/page/vo")
-    //    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-    //            HttpServletRequest request) {
-    //        long size = questionQueryRequest.getPageSize();
-    //        // 限制爬虫
-    //        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-    //        Page<Question> questionPage = questionService.searchFromEs(questionQueryRequest);
-    //        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
-    //    }
 
     /**
      * 编辑（用户）
@@ -283,5 +274,83 @@ public class QuestionController {
         boolean result = questionService.updateById(question);
         return ResultUtils.success(result);
     }
+
+    // endregion
+
+    // region questionSubmit
+
+    /**
+     * 代码提交
+     *
+     * @param questionSubmitAddRequest
+     * @param request
+     * @return 提交记录id
+     */
+    @PostMapping("/questionSubmit")
+    public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
+                                               HttpServletRequest request) {
+        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 登录才能操作
+        final User loginUser = userService.getLoginUser(request);
+        Long userId = loginUser.getId();
+        String language = questionSubmitAddRequest.getLanguage();
+        // 参数校验
+        if (!questionSubmitService.validLang(language)) {
+            log.error("request：{}语言参数有误", request.getPathInfo());
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "语言不存在");
+        }
+        Long result = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, userId);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 查询个人提价记录
+     *
+     * @param questionSubmitQueryRequest
+     * @param request
+     */
+    @PostMapping("/my/list/submitPage")
+    public BaseResponse<Page<QuestionSubmitVO>> listMyQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
+                                                                           HttpServletRequest request) {
+        if (questionSubmitQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        Long userId = loginUser.getId();
+        long current = questionSubmitQueryRequest.getCurrent();
+        long size = questionSubmitQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        Page<QuestionSubmit> questionSubmitPage = questionSubmitService.page(new Page<>(current, size),
+                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage, userId));
+    }
+
+    /**
+     * 管理员分页查询提交记录
+     *
+     * @param questionSubmitQueryRequest
+     * @param request
+     */
+    @PostMapping("/list/submitPage")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
+                                                                         HttpServletRequest request) {
+        if (questionSubmitQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        Long userId = loginUser.getId();
+        long current = questionSubmitQueryRequest.getCurrent();
+        long size = questionSubmitQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        Page<QuestionSubmit> questionSubmitPage = questionSubmitService.page(new Page<>(current, size),
+                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage, userId));
+    }
+    // endregion
 
 }

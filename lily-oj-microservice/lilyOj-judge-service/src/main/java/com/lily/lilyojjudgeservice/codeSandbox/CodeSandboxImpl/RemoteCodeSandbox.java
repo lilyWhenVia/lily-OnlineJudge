@@ -3,10 +3,10 @@ package com.lily.lilyojjudgeservice.codeSandbox.CodeSandboxImpl;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.lily.onlineJudge.common.ErrorCode;
-import com.lily.onlineJudge.judge.codeSandbox.CodeSandbox;
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.ExecuteCodeRequest;
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.ExecuteCodeResponse;
+import com.lily.lilyojcommon.common.ErrorCode;
+import com.lily.lilyojjudgeservice.codeSandbox.CodeSandbox;
+import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeRequest;
+import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -23,7 +23,7 @@ public class RemoteCodeSandbox implements CodeSandbox {
                 .body(JSONUtil.toJsonStr(executeCodeRequest))
                 .execute();
         if (response.getStatus() != 200){
-            return new ExecuteCodeResponse(null, "调用代码沙箱失败",ErrorCode.SYSTEM_ERROR.getCode(), null);
+            return new ExecuteCodeResponse(null, "调用代码沙箱失败", ErrorCode.SYSTEM_ERROR.getCode(), null);
         }
         String body = response.body();
         if (StringUtils.isEmpty(body)){

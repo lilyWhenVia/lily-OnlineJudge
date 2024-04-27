@@ -1,20 +1,20 @@
 package com.lily.lilyojquestionservice.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lily.onlineJudge.annotation.AuthCheck;
-import com.lily.onlineJudge.common.BaseResponse;
-import com.lily.onlineJudge.common.ErrorCode;
-import com.lily.onlineJudge.common.ResultUtils;
-import com.lily.onlineJudge.constant.UserConstant;
-import com.lily.onlineJudge.exception.BusinessException;
-import com.lily.onlineJudge.exception.ThrowUtils;
-import com.lily.onlineJudge.model.dto.questionSubmit.QuestionSubmitAddRequest;
-import com.lily.onlineJudge.model.dto.questionSubmit.QuestionSubmitQueryRequest;
-import com.lily.onlineJudge.model.entity.QuestionSubmit;
-import com.lily.onlineJudge.model.entity.User;
-import com.lily.onlineJudge.model.vo.QuestionSubmitVO;
-import com.lily.onlineJudge.service.QuestionSubmitService;
-import com.lily.onlineJudge.service.UserService;
+import com.lily.lilyojcommon.annotation.AuthCheck;
+import com.lily.lilyojcommon.common.BaseResponse;
+import com.lily.lilyojcommon.common.ErrorCode;
+import com.lily.lilyojcommon.common.ResultUtils;
+import com.lily.lilyojcommon.constant.UserConstant;
+import com.lily.lilyojcommon.exception.BusinessException;
+import com.lily.lilyojcommon.exception.ThrowUtils;
+import com.lily.lilyojmodel.model.dto.questionSubmit.QuestionSubmitAddRequest;
+import com.lily.lilyojmodel.model.dto.questionSubmit.QuestionSubmitQueryRequest;
+import com.lily.lilyojmodel.model.entity.QuestionSubmit;
+import com.lily.lilyojmodel.model.entity.User;
+import com.lily.lilyojmodel.model.vo.QuestionSubmitVO;
+import com.lily.lilyojquestionservice.service.QuestionSubmitService;
+import com.lily.lilyojserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 /**
  * 帖子收藏接口
@@ -33,23 +32,24 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/question_submit")
 @Slf4j
+@Deprecated
 public class QuestionSubmitController {
     @Resource
     private QuestionSubmitService questionSubmitService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userService;
 
     /**
      * 代码提交
      *
      * @param questionSubmitAddRequest
      * @param request
-     * @return resultNum 收藏变化数
+     * @return 提交记录 id
      */
     @PostMapping("/")
-    public BaseResponse<Long> doQuestionSubmit(@Valid @RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
+                                               HttpServletRequest request) {
         if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -67,14 +67,14 @@ public class QuestionSubmitController {
     }
 
     /**
-     * 查询个人提价记录
+     * 查询个人提交记录
      *
-     * @param questionSubmitQueryRequest
-     * @param request
+     * @param questionSubmitQueryRequest 查询条件
+     * @param request                    请求
      */
     @PostMapping("/my/list/page")
     public BaseResponse<Page<QuestionSubmitVO>> listMyQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
-            HttpServletRequest request) {
+                                                                           HttpServletRequest request) {
         if (questionSubmitQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -92,8 +92,8 @@ public class QuestionSubmitController {
     /**
      * 管理员分页查询提交记录
      *
-     * @param questionSubmitQueryRequest
-     * @param request
+     * @param questionSubmitQueryRequest 查询条件
+     * @param request                   请求
      */
     @PostMapping("/list/page")
     //  pagesize current 存在默认值

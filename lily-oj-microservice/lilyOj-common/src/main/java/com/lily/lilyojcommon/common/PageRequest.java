@@ -1,6 +1,5 @@
 package com.lily.lilyojcommon.common;
-
-import com.lily.onlineJudge.constant.CommonConstant;
+import com.lily.lilyojcommon.constant.CommonConstant;
 import lombok.Data;
 
 /**

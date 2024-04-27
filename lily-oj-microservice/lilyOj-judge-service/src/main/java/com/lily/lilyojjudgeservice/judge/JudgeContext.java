@@ -1,10 +1,10 @@
 package com.lily.lilyojjudgeservice.judge;
 
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.CodeOutput;
-import com.lily.onlineJudge.judge.codeSandbox.model.dto.JudgeInfo;
-import com.lily.onlineJudge.model.entity.JudgeCase;
-import com.lily.onlineJudge.model.entity.Question;
-import com.lily.onlineJudge.model.entity.QuestionSubmit;
+import com.lily.lilyojmodel.model.dto.judge.CodeOutput;
+import com.lily.lilyojmodel.model.dto.judge.JudgeCase;
+import com.lily.lilyojmodel.model.dto.judge.JudgeInfo;
+import com.lily.lilyojmodel.model.entity.Question;
+import com.lily.lilyojmodel.model.entity.QuestionSubmit;
 import lombok.Data;
 
 import java.util.List;

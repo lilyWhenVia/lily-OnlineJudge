@@ -1,7 +1,7 @@
 package com.lily.lilyojmodel.model.dto.question;
 
-import com.lily.onlineJudge.model.entity.JudgeCase;
-import com.lily.onlineJudge.model.entity.JudgeConfig;
+import com.lily.lilyojmodel.model.dto.judge.JudgeCase;
+import com.lily.lilyojmodel.model.dto.judge.JudgeConfig;
 import lombok.Data;
 
 import java.io.Serializable;

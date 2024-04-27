@@ -1,6 +1,6 @@
 package com.lily.lilyojmodel.model.vo;
 
-import com.lily.onlineJudge.model.entity.JudgeInfo;
+import com.lily.lilyojmodel.model.dto.judge.JudgeInfo;
 import lombok.Data;
 
 import java.io.Serializable;
