@@ -3,6 +3,7 @@ package com.lily.lilyojjudgeservice.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.lily.lilyojcommon.common.ErrorCode;
 import com.lily.lilyojcommon.common.ExecuteStatusEnum;
+import com.lily.lilyojcommon.common.LanguageEnum;
 import com.lily.lilyojcommon.constant.StatusConstant;
 import com.lily.lilyojcommon.exception.BusinessException;
 import com.lily.lilyojcommon.exception.ThrowUtils;
@@ -65,6 +66,10 @@ public class JudgeServiceImpl implements JudgeService {
         ThrowUtils.throwIf(StringUtils.isEmpty(language), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StringUtils.isEmpty(code), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(status == null || StatusConstant.SUCCEED == status, ErrorCode.PARAMS_ERROR);
+        // 校验编程语言
+        if (!LanguageEnum.isLanguageEnum(language)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "language参数错误");
+        }
 //        3. 更改判题状态为判题中
         QuestionSubmit submitStatus = new QuestionSubmit();
         submitStatus.setId(id);
