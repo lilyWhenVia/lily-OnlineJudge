@@ -200,14 +200,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
                 queryWrapper.like("tags", "\"" + tag + "\"");
             }
         }
-        queryWrapper.eq(submitNum > 0, "submitNum", submitNum);
-        queryWrapper.eq(acceptedNum > 0, "acceptedNum", acceptedNum);
-        queryWrapper.eq(userId > 0, "userId", userId);
-        queryWrapper.eq(id > 0, "id", id);
+        queryWrapper.eq(submitNum!=null&&submitNum > 0, "submitNum", submitNum);
+        queryWrapper.eq(acceptedNum!=null&&acceptedNum > 0, "acceptedNum", acceptedNum);
+        queryWrapper.eq(userId!=null&&userId > 0, "userId", userId);
+        queryWrapper.eq(id!=null&&id > 0, "id", id);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
     }
+
 
 }
 

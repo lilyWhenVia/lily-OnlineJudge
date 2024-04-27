@@ -25,6 +25,7 @@ import com.lily.lilyojquestionservice.service.QuestionSubmitService;
 import com.lily.lilyojserviceclient.service.JudgeFeignClient;
 import com.lily.lilyojserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -34,6 +35,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * @author lily
@@ -68,6 +70,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Long questionId = questionSubmitAddRequest.getQuestionId();
         String language = questionSubmitAddRequest.getLanguage();
         String code = questionSubmitAddRequest.getCode();
+        // 2.0 统计提交次数
+        Question question = questionService.getById(questionId);
+        question.setSubmitNum(question.getSubmitNum() + 1);
+        boolean b = questionService.updateById(question);
+        if (!b) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "系统异常");
+        }
         // 2. 存入数据库，更改状态
         QuestionSubmit questionSubmit = new QuestionSubmit();
         questionSubmit.setQuestionId(questionId);
@@ -140,7 +149,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             questionSubmitVO.setQuestionVO(questionVO);
         }
 
-        return null;
+        return questionSubmitVO;
     }
 
     // todo stream方法，少查数据库
@@ -153,11 +162,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             questionSubmitVOS.add(questionSubmitVO);
         }
         // 复制所有属性
-        Page<QuestionSubmitVO> questionSubmitVOPage = new Page<>();
+        Page<QuestionSubmitVO> questionSubmitVOPage = new Page<>(questionSubmitPage.getCurrent(), questionSubmitPage.getSize(), questionSubmitPage.getTotal());
         BeanUtils.copyProperties(questionSubmitPage, questionSubmitVOPage);
         questionSubmitVOPage.setRecords(questionSubmitVOS);
         return questionSubmitVOPage;
     }
+
+
 
     @Override
     public QueryWrapper getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest) {

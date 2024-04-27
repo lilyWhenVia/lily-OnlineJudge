@@ -306,7 +306,7 @@ public class QuestionController {
     }
 
     /**
-     * 查询个人提价记录
+     * 查询个人提交记录
      *
      * @param questionSubmitQueryRequest
      * @param request

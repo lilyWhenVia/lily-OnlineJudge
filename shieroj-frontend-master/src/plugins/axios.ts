@@ -9,7 +9,7 @@ import { OpenAPI } from "../../backapi";
 OpenAPI.WITH_CREDENTIALS = true;
 const baseUrl =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:8104"
+    ? "http://localhost:8100"
     : "http://oj.kongshier.top";
 
 OpenAPI.BASE = baseUrl;

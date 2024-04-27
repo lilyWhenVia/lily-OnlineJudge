@@ -9,7 +9,7 @@
       </a-layout-content>
       <a-layout-footer class="footer"
         ><a href="https://github.com/kongshier" target="_blank">
-          Cat OJ By 猫十二懿</a
+          Cat OJ By lily</a
         >
         <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">
           桂ICP备2023002099号
