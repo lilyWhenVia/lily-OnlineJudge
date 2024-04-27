@@ -25,7 +25,7 @@ public class CodeSandboxFactory {
                 return new ThirdPartyCodeSandbox();
             case "example":
                 return new ExampleCodeSandbox();
-            case "Remote":
+            case "remote":
                 return new RemoteCodeSandbox();
         }
         log.info("codeSandbox type not found");

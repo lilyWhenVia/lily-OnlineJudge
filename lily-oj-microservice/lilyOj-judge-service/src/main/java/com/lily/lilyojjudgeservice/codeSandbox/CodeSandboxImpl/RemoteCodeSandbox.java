@@ -7,6 +7,7 @@ import com.lily.lilyojcommon.common.ErrorCode;
 import com.lily.lilyojjudgeservice.codeSandbox.CodeSandbox;
 import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeRequest;
 import com.lily.lilyojmodel.model.dto.judge.ExecuteCodeResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,10 +17,14 @@ import org.springframework.util.StringUtils;
  */
 @Service
 public class RemoteCodeSandbox implements CodeSandbox {
+
+    @Value("${codesandbox.url}")
+    private String remoteCodeSandboxUrl = "http://localhost:8080/javaCodeSandbox";
+
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("RemoteCodeSandbox...");
-        HttpResponse response = HttpUtil.createPost("http://localhost:8080/codeSandbox")
+        HttpResponse response = HttpUtil.createPost(remoteCodeSandboxUrl)
                 .body(JSONUtil.toJsonStr(executeCodeRequest))
                 .execute();
         if (response.getStatus() != 200){
