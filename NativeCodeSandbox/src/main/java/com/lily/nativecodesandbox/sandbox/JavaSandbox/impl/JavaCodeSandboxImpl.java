@@ -49,6 +49,7 @@ public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCode
     @Override
     public ExecuteCodeResponse doRun(List<String> inputList) {
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        JudgeInfo judgeInfo = new JudgeInfo();
         String inputArgs;
         long maxTime = 0L;
         final Boolean[] OUT_TIME_FLAG = {false};
@@ -83,6 +84,7 @@ public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCode
                     codeOutput.setInputExample(inputArgs);
                     codeOutput.setStdoutMessage(outputMessage.toString()); // 代码执行结果
                     codeOutputList.add(codeOutput);
+                    judgeInfo.setMessage(ExecuteStatusEnum.RUN_SUCCESS.getStatusName());
                     log.info("执行成功");
                 } else {
                     // 分批获取程序的异常输出
@@ -93,6 +95,7 @@ public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCode
                     codeOutput.setStdErrorMessage(errorMessage.toString()); // 输出错误信息
                     codeOutputList.add(codeOutput);
                     executeCodeResponse.setCodeOutput(codeOutputList); // 便于最终统计size
+                    judgeInfo.setMessage(ExecuteStatusEnum.RUN_FAIL.getStatusName());
                     // 是否为超时结束
                     if (inputList.size() != codeOutputList.size()) {
                         executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.RUN_TIMEOUT.getExecuteStatus()); // 接口执行信息
@@ -113,7 +116,6 @@ public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCode
         executeCodeResponse.setCodeOutput(codeOutputList);
         executeCodeResponse.setCodeSandboxMes(ExecuteStatusEnum.RUN_SUCCESS.getStatusName());
         executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus()); // 执行成功状态
-        JudgeInfo judgeInfo = new JudgeInfo();
         // 统计
         judgeInfo.setTime(maxTime);
         judgeInfo.setMemory(256L);

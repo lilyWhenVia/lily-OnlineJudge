@@ -12,6 +12,7 @@ import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.lily.nativecodesandbox.common.ExecuteStatusEnum;
 import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
+import com.lily.nativecodesandbox.model.JudgeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -121,9 +122,9 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
      * @return
      */
     public ExecuteCodeResponse doCompile(String codeFilePath) {
-        // TODO
 //        2. 编译代码获取执行结果
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        JudgeInfo judgeInfo = new JudgeInfo();
         String compileCmd = String.format("javac -encoding UTF-8 %s", codeFilePath);
         int exitValue;
         try {
@@ -139,6 +140,7 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
                 bufferedReader.lines().forEach(line -> outputMessage.append(line).append("\n"));
                 executeCodeResponse.setCodeSandboxMes(outputMessage.toString()); // 编译信息
                 executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.COMPILE_SUCCESS.getExecuteStatus()); // 编译成功状态
+                judgeInfo.setMessage(ExecuteStatusEnum.COMPILE_SUCCESS.getStatusName());
                 log.info("编译成功");
             } else {
                 // 分批获取程序的异常输出
@@ -147,11 +149,14 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
                 bufferedReader.lines().forEach(line -> errorMessage.append(line).append("\n"));
                 executeCodeResponse.setCodeSandboxMes(errorMessage.toString()); // 编译信息
                 executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.COMPILE_FAIL.getExecuteStatus()); // 编译失败
+                judgeInfo.setMessage(ExecuteStatusEnum.COMPILE_FAIL.getStatusName());
                 log.error("编译失败");
             }
         } catch (IOException | InterruptedException e) {
             return getErrorResponse(e);
         }
+        // 编译成功状态
+        executeCodeResponse.setJudgeInfo(judgeInfo);
         return executeCodeResponse;
     }
 

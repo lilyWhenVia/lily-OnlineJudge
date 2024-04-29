@@ -65,6 +65,7 @@ public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCode
     public ExecuteCodeResponse doCompile(String codeFilePath) {
 //        2. 编译代码获取执行结果
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        JudgeInfo judgeInfo = new JudgeInfo();
         // docker exec 5af9c3b31b87 javac /app/execCode/uuid/Main.java
         String[] compileCmd = {"javac", "-encoding", "UTF-8", codeDirPath+File.separator+codeFileName+".java"};
         DockerClient dockerClient = getDockerClient();
@@ -124,11 +125,13 @@ public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCode
         if (compileFail[0]){
             executeCodeResponse.setCodeSandboxMes(ExecuteStatusEnum.COMPILE_FAIL.getStatusName());
             executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.COMPILE_FAIL.getExecuteStatus());
+            judgeInfo.setMessage(ExecuteStatusEnum.COMPILE_FAIL.getStatusName());
         }else{
             executeCodeResponse.setCodeSandboxMes(ExecuteStatusEnum.COMPILE_SUCCESS.getStatusName());
             executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.COMPILE_SUCCESS.getExecuteStatus()); // 执行成功状态
+            judgeInfo.setMessage(ExecuteStatusEnum.COMPILE_SUCCESS.getStatusName());
         }
-
+        executeCodeResponse.setJudgeInfo(judgeInfo);
         return executeCodeResponse;
     }
     @Override
@@ -136,7 +139,7 @@ public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCode
 
         DockerClient dockerClient = getDockerClient();
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
-
+        JudgeInfo judgeInfo = new JudgeInfo();
         List<CodeOutput> codeOutputList = new ArrayList<>();
 
         long maxTime = 0L;
@@ -269,21 +272,22 @@ public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCode
         if (timeout[0]) {
             executeCodeResponse.setCodeSandboxMes(ExecuteStatusEnum.RUN_TIMEOUT.getStatusName());
             executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.RUN_TIMEOUT.getExecuteStatus());
+            judgeInfo.setMessage(ExecuteStatusEnum.RUN_TIMEOUT.getStatusName());
 
         } else if (runFail[0]){
             executeCodeResponse.setCodeSandboxMes(ExecuteStatusEnum.RUN_FAIL.getStatusName());
             executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.RUN_FAIL.getExecuteStatus());
+            judgeInfo.setMessage(ExecuteStatusEnum.RUN_FAIL.getStatusName());
         }else{
             executeCodeResponse.setCodeSandboxMes(ExecuteStatusEnum.RUN_SUCCESS.getStatusName());
             executeCodeResponse.setCodeSandboxStatus(ExecuteStatusEnum.RUN_SUCCESS.getExecuteStatus()); // 执行成功状态
+            judgeInfo.setMessage(ExecuteStatusEnum.RUN_SUCCESS.getStatusName());
         }
         executeCodeResponse.setCodeOutput(codeOutputList);
-        JudgeInfo judgeInfo = new JudgeInfo();
         // 统计
         judgeInfo.setTime(maxTime);
         judgeInfo.setMemory(maxMemory[0]);
         judgeInfo.setStack(maxStack[0]);
-        judgeInfo.setMessage("");
         executeCodeResponse.setJudgeInfo(judgeInfo);
         return executeCodeResponse;
     }
