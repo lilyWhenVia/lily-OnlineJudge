@@ -10,5 +10,8 @@ ADD target/yuoj-backend-judge-service-0.0.1-SNAPSHOT.jar .
 # 暴露端口
 EXPOSE 8104
 
+# 设置容器内存限制为512MB
+CMD ["--memory=512m", "--memory-swap=512m"]
+
 # 启动命令
 ENTRYPOINT ["java","-jar","/app/yuoj-backend-judge-service-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]

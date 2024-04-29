@@ -21,6 +21,13 @@ import org.springframework.util.StringUtils;
 @Service
 public class RemoteCodeSandbox implements CodeSandbox {
 
+    // 定义鉴权请求头和密钥
+    @Value("${codeSandbox.auth.header}")
+    private static final String AUTH_REQUEST_HEADER = "auth";
+
+    @Value("${codeSandbox.auth.secret}")
+    private static final String AUTH_REQUEST_SECRET = "secretKey";
+
     @Value("${codesandbox.url}")
     private String remoteCodeSandboxUrl = "http://localhost:8080/java";
 
@@ -28,6 +35,8 @@ public class RemoteCodeSandbox implements CodeSandbox {
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("RemoteCodeSandbox...");
         HttpResponse response = HttpUtil.createPost(remoteCodeSandboxUrl)
+                .header("Content-Type", "application/json")
+                .header(AUTH_REQUEST_HEADER, AUTH_REQUEST_SECRET)
                 .body(JSONUtil.toJsonStr(executeCodeRequest))
                 .execute();
         // 获取返回结果

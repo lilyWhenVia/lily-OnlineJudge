@@ -47,10 +47,11 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
      */
     public final String globalCodePathName = userDir + File.separator + GLOBAL_CODE_DIR_NAME;
 
+    public final String codeUUID = UUID.randomUUID().toString();
     /**
      * 隔离用户代码文件夹目录路径
      */
-    public final String codeDirPath = globalCodePathName + File.separator + UUID.randomUUID();
+    public final String codeDirPath = globalCodePathName + File.separator + codeUUID;
 
     /**
      * 用户代码文件名

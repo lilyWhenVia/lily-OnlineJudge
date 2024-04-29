@@ -54,7 +54,7 @@ public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCode
      * docker内挂载路径目录
      * /app/execCode/uuid
      */
-    private final String codeDirPath = volume+File.separator+GLOBAL_CODE_DIR_NAME+File.separator+ UUID.randomUUID();
+    private final String codeDirPath = volume+File.separator+GLOBAL_CODE_DIR_NAME+File.separator+ codeUUID;
 
     // 初始化docker
     static {
