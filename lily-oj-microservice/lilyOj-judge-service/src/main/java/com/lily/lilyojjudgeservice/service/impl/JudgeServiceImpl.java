@@ -118,7 +118,7 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit succeedQueSub = new QuestionSubmit();
         succeedQueSub.setId(questionSubmitId);
         // 7.1 成功判题结束
-        if (StringUtils.equals(judgeInfo.getMessage(),ExecuteStatusEnum.RUN_SUCCESS.getStatusName())) {
+        if (StringUtils.equals(codeSandboxMes,ExecuteStatusEnum.RUN_SUCCESS.getStatusName())) {
             succeedQueSub.setStatus(StatusConstant.SUCCEED);
         } else {
             succeedQueSub.setStatus(StatusConstant.FAILED);

@@ -1,6 +1,8 @@
 package com.lily.lilyojjudgeservice.rabbitmq;
 
+import com.lily.lilyojcommon.common.ErrorCode;
 import com.lily.lilyojcommon.constant.MqConstant;
+import com.lily.lilyojcommon.exception.BusinessException;
 import com.lily.lilyojjudgeservice.service.JudgeService;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -39,17 +41,23 @@ public class MessageConsumer {
         log.info("receive a message {}", questionSubmitId);
 
         // ...业务代码处理消息...
-        judgeService.doJudge(questionSubmitId);
-
-        // 手动确认消息接收情况
         try {
-            // 手动确认消息已经被消费， false为不批量确认
-            channel.basicAck(deliveryTag, false);
-            log.info("message {}: ack succeed", message);
-        } catch (IOException e) {
-            log.error("message {}: ack failed", message);
-            throw new RuntimeException(e);
+            judgeService.doJudge(questionSubmitId);
+        }catch (Exception e){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, e.getMessage());
+        }finally {
+            // 手动确认消息接收情况
+            try {
+                // 手动确认消息已经被消费， false为不批量确认
+                channel.basicAck(deliveryTag, false);
+                log.info("message {}: ack succeed", message);
+            } catch (IOException e) {
+                log.error("message {}: ack failed", message);
+                throw new RuntimeException(e);
+            }
         }
+
+
     }
 }
 
