@@ -29,7 +29,7 @@ public class RemoteCodeSandbox implements CodeSandbox {
     private static final String AUTH_REQUEST_SECRET = "secretKey";
 
     @Value("${codesandbox.url}")
-    private String remoteCodeSandboxUrl = "http://localhost:8080/java";
+    private String remoteCodeSandboxUrl = "http://localhost:8081/java";
 
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {

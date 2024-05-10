@@ -1,0 +1,6 @@
+debug: false
+server:
+  port: 8081
+Docker:
+  host: localhost
+  port: 2375

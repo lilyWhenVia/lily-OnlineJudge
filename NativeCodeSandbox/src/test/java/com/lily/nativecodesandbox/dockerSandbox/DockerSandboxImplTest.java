@@ -4,6 +4,7 @@ import com.lily.nativecodesandbox.model.ExecuteCodeRequest;
 import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.sandbox.dockerSandbox.impl.DockerSandboxImpl;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ class DockerSandboxImplTest {
                 "    }\n" +
                 "}";
         executeCodeRequest.setCode(code);
-        List<String> inputList = List.of("1 2", "1 3");
+        List<String> inputList = Arrays.asList("1 2", "1 3");
         executeCodeRequest.setInputList(inputList);
         DockerSandboxImpl dockerSandbox = new DockerSandboxImpl();
         ExecuteCodeResponse executeCodeResponse;

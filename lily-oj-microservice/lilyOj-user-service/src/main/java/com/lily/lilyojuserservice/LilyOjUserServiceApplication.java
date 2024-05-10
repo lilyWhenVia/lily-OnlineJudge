@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @ComponentScan(basePackages = "com.lily")
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.lily.lilyojuserservice.service")
+@EnableFeignClients(basePackages = "com.lily.lilyojserviceclient.service")
 public class LilyOjUserServiceApplication {
 
     public static void main(String[] args) {

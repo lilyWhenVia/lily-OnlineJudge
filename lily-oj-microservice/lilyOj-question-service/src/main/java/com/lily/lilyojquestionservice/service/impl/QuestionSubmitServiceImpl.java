@@ -23,7 +23,6 @@ import com.lily.lilyojquestionservice.mapper.QuestionSubmitMapper;
 import com.lily.lilyojquestionservice.rabbitmq.QuestionSubmitProducer;
 import com.lily.lilyojquestionservice.service.QuestionService;
 import com.lily.lilyojquestionservice.service.QuestionSubmitService;
-import com.lily.lilyojserviceclient.service.JudgeFeignClient;
 import com.lily.lilyojserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -51,10 +50,6 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Resource
     private QuestionService questionService;
-
-//
-//    @Resource
-//    private JudgeFeignClient judgeService;
 
     @Resource
     private QuestionSubmitProducer questionSubmitProducer;

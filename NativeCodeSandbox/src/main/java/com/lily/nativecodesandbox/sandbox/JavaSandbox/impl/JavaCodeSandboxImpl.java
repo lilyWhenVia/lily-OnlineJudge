@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -41,7 +42,7 @@ public class JavaCodeSandboxImpl extends CodeSandboxTemplate implements JavaCode
                 "}";
         executeCodeRequest.setCode(code);
 
-        List<String> inputList = List.of("1 2", "1 3");
+        List<String> inputList = Arrays.asList("1 2", "1 3");
         executeCodeRequest.setInputList(inputList);
         javaCodeSandboxImpl.executeCode(executeCodeRequest);
     }

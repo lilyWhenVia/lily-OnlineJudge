@@ -1,0 +1,47 @@
+# 公共配置文件
+spring:
+  application:
+    name: lilyOj-gateway
+  main:
+    web-application-type: reactive
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    # 30 天过期
+    timeout: 2592000
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+    gateway:
+      routes:
+        - id: lilyOj-question-service
+          uri: lb://lilyOj-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: lilyOj-judge-service
+          uri: lb://lilyOj-judge-service
+          predicates:
+            - Path=/api/judge/**
+        - id: lilyOj-user-service
+          uri: lb://lilyOj-user-service
+          predicates:
+            - Path=/api/user/**
+server:
+  address: 0.0.0.0
+  port: 8100
+# 聚合接口文档配置
+knife4j:
+  gateway:
+    # ① 第一个配置，开启gateway聚合组件
+    enabled: true
+    # ② 第二行配置，设置聚合模式采用discover服务发现的模式
+    strategy: discover
+    discover:
+      # ③ 第三行配置，开启discover模式
+      enabled: true
+      # ④ 第四行配置，聚合子服务全部为Swagger2规范的文档
+      version: swagger2
+      excluded-services:
+        - lilyOj-gateway

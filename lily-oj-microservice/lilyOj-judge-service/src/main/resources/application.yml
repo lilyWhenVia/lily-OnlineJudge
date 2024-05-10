@@ -49,7 +49,7 @@ knife4j:
 
 codeSandbox:
   type: remote
-  url: http://localhost:8080/java
+  url: http://localhost:8081/docker
   auth:
     header: auth
-    secret: #Fcyz7ieCPY?3x6/w3a:0AY=khQg;|+.
+    secret: /#Fcyz7ieCPY?3x6/w3a:0AY=khQg;|+.

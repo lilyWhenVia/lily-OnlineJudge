@@ -31,10 +31,10 @@ public class codeController {
 
     // 定义鉴权请求头和密钥
     @Value("${codeSandbox.auth.header}")
-    private static final String AUTH_REQUEST_HEADER = "auth";
+    private final String AUTH_REQUEST_HEADER = "auth";
 
     @Value("${codeSandbox.auth.secret}")
-    private static final String AUTH_REQUEST_SECRET = "secretKey";
+    private final String AUTH_REQUEST_SECRET = "secretKey";
 
 
 

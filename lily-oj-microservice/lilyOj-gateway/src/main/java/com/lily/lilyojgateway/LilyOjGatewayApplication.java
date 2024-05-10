@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-//@ComponentScan(basePackages = "com.lily.lilyojgateway.*")
+@ComponentScan(basePackages = "com.lily.lilyojgateway.*")
 public class LilyOjGatewayApplication {
 
     public static void main(String[] args) {

@@ -1,3 +1,9 @@
+-- 创建库
+create database if not exists online_judge;
+
+-- 切换库
+use online_judge;
+
 create table question
 (
     id          bigint auto_increment comment 'id'

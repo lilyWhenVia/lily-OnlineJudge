@@ -47,5 +47,4 @@ mybatis-plus:
 knife4j:
   enable: true
 
-codeSandbox:
-  type: example
+

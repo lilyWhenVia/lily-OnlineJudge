@@ -15,6 +15,7 @@ import com.lily.nativecodesandbox.model.ExecuteCodeResponse;
 import com.lily.nativecodesandbox.model.JudgeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * Created by lily via on 2024/4/18 22:36
  */
 @Slf4j
+@Component
 public abstract class CodeSandboxTemplate implements CodeSandbox {
 
 

@@ -38,7 +38,7 @@ import static com.lily.nativecodesandbox.Once.FirstInitJob.containerId;
 public class DockerSandboxImpl extends CodeSandboxTemplate implements DockerCodeSandbox {
 
     // ------------------------docker配置------------------------
-    @Value("${Docker.host:192.168.70.130}")
+    @Value("${Docker.host}")
     public static String host = "192.168.70.130";
 
     @Value("${Docker.host:2375}")
